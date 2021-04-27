@@ -1,0 +1,38 @@
+spring:
+  profiles: dev
+  datasource:
+    url: jdbc:mysql://localhost:3306/fogostore_db?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
+    username: root
+    password: 123456
+server:
+  port: ${PORT:5004}
+  ssl:
+    key-store: C:\Users\Admin\Desktop\project\fogostore\ssl\fogostore.com\fogostore_com.p12
+    key-store-password: fogostore@123
+    key-alias: fogostoredomain
+    key-store-type: PKCS12
+    key-password: fogostore@123
+    enabled: false
+image_folder_path: C:\Users\Admin\Desktop\project\fogostore\backup\202104101805\images
+sitemap_location: C:\Users\Admin\Desktop\project\fogostore\sitemap
+domain_name: http://localhost:5003
+---
+
+spring:
+  profiles: prod
+  datasource:
+    url: jdbc:mysql://103.143.208.22:3306/fogostore_db?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
+    username: fmanclient
+    password: FmanClient@123
+server:
+  port: ${PORT:443}
+  ssl:
+    key-store: /deployments/fogostore/ssl/20210124/fogostore.p12
+    key-store-password: fogostore@123
+    key-alias: fogostore
+    key-store-type: PKCS12
+    key-password: fogostore@123
+    enabled: true
+image_folder_path: /deployments/fogostore/images
+sitemap_location: /deployments/fogostore/sitemap
+domain_name: https://fogostore.com
