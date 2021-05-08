@@ -171,8 +171,8 @@ class ProductServiceImpl implements ProductService {
             productTypeRepository.save(productType);
         }
 
-        List<ProductTag> newProductTags = getNewProductTagFromIdList(productDto.getTagIds(), product.getId());
-        productTagRepository.saveAll(newProductTags);
+//        List<ProductTag> newProductTags = getNewProductTagFromIdList(productDto.getTagIds(), product.getId());
+//        productTagRepository.saveAll(newProductTags);
 
         //save page meta data
         PageMetadata pageMetadata = productDto.getPageMetadata();

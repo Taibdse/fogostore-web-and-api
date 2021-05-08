@@ -1,5 +1,6 @@
 package com.example.fogostore.controller.mvc;
 
+import com.example.fogostore.common.constants.PageSize;
 import com.example.fogostore.common.enumeration.PageType;
 import com.example.fogostore.dto.BlogDto;
 import com.example.fogostore.model.Blog;
@@ -24,8 +25,8 @@ public class BlogPageController {
 
     @RequestMapping(value = {"/bai-viet",})
     public String blogPageAction(Model model,
-                                 @RequestParam(defaultValue = "10") int size,
-                                 @RequestParam(defaultValue = "1") int page){
+                                 @RequestParam(defaultValue = PageSize.DEFAULT_PAGE_SIZE + "") int size,
+                                 @RequestParam(defaultValue = "1") int page) {
         sharedMvcService.addSharedModelAttributes(model, PageType.BLOGS);
         Page<Blog> blogPage = blogService.search("", page, size);
         model.addAttribute("blogPage", blogPage);
@@ -33,7 +34,7 @@ public class BlogPageController {
     }
 
     @RequestMapping(value = {"/bai-viet/{slug}",})
-    public String blogDetailsPageAction(Model model, @PathVariable String slug){
+    public String blogDetailsPageAction(Model model, @PathVariable String slug) {
         BlogDto blog = blogService.getBySlug(slug);
 
         model.addAttribute("blog", blog);

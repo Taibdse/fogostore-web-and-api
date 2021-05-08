@@ -1,0 +1,106 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="layout" tagdir="/WEB-INF/tags" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
+<layout:wrapper>
+    <layout:page-header title="Thông tin sản phẩm"/>
+    <div id="home-wrap" class="content-section" style="padding-top: 30px;">
+        <!-- Product Intro -->
+        <c:if test="${product != null}">
+            <div class="container">
+                <div class="row no-margin wrap-text padding-onlytop-lg">
+                    <div class="col-md-6 padding-leftright-null">
+                        <div class="text small padding-top-null">
+                            <img src="${product.mainImage}" alt="${product.name}" class="img-post">
+                        </div>
+                        <div class="row no-margin">
+                            <div class="project-images grid text">
+                                <div class="col-xs-6 col-sm-3 padding-leftright-null">
+                                    <a href="${product.mainImage}" class="lightbox">
+                                        <div class="image" style="background-image:url(${product.mainImage})"></div>
+                                    </a>
+                                </div>
+                                <c:forEach items="${product.subImages}" var="subImage">
+                                    <div class="col-xs-6 col-sm-3 padding-leftright-null">
+                                        <a href="${subImage}" class="lightbox">
+                                            <div class="image" style="background-image:url(${subImage})"></div>
+                                        </a>
+                                    </div>
+                                </c:forEach>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 padding-leftright-null">
+                        <div class="row no-margin">
+                            <!-- Single Services -->
+                            <div id="product-header">
+                                <div class="text small padding-top-null padding-md-bottom">
+                                    <h1>${product.name}</h1>
+                                    <span class="price">
+                                    <layout:money price="${product.price}"/>
+                                </span>
+                                    <c:forEach items="${product.productTypes}" var="productType">
+                                        <div style="font-size: 1.1em">
+                                            <layout:money price="${productType.price}"/>
+                                            <span style="margin-left: 10px"
+                                                  class="d-inline-block">${productType.name}</span>
+                                        </div>
+                                    </c:forEach>
+                                    <div style="margin-top: 20px">${product.description}</div>
+                                        <%--                                <div class="add-to-cart">--%>
+                                        <%--                                    <input type="number" step="1" min="" max="" name="quantity" value="1" title="Qtà" class="input-text qty text" size="4">--%>
+                                        <%--                                    <button type="submit" class="btn-alt small border">Add to cart</button>--%>
+                                        <%--                                </div>--%>
+                                        <%--                                <a href="javascript:void(0)" id="btn-share" class="margin-bottom">Share</a>--%>
+                                        <%--                                <div class="share-box">--%>
+                                        <%--                                    <a href="#"><i class="fa fa-facebook"></i></a>--%>
+                                        <%--                                    <a href="#"><i class="fa fa-twitter"></i></a>--%>
+                                        <%--                                    <a href="#"><i class="fa fa-pinterest-p"></i></a>--%>
+                                        <%--                                    <a href="#"><i class="fa fa-envelope"></i></a>--%>
+                                        <%--                                </div>--%>
+                                        <%--                                <span class="product-cats">--%>
+                                        <%--                                               Categories <a href="">New Arrivals</a>, <a href="">Accessories</a>--%>
+                                        <%--                                           </span>--%>
+                                        <%--                                <span class="product-tags">--%>
+                                        <%--                                               Tags <a href="">Wood</a>, <a href="">Notebook</a>--%>
+                                        <%--                                           </span>--%>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row no-margin">
+                <div class="border-separator"></div>
+            </div>
+            <div class="container">
+                <div class="row no-margin wrap-text">
+                    <div class="col-md-12 padding-leftright-null">
+                        <div class="text padding-bottom-null small">
+                            <ul class="nav nav-tabs product" role="tablist">
+                                <li role="presentation" class="active">
+                                    <a href="#tab-one" aria-controls="tab-one" role="tab" data-toggle="tab">
+                                        Thông số kỹ thuật
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="tab-one">
+                                        ${product.techInfo}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row no-margin">
+                <div class="border-separator"></div>
+            </div>
+        </c:if>
+        <c:if test="${product == null}">
+            <h3 class="text-center" style="margin-bottom: 20px">Không tìm thấy sản phẩm này</h3>
+        </c:if>
+
+    </div>
+</layout:wrapper>

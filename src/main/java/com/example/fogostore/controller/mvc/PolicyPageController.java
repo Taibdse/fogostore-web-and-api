@@ -23,8 +23,6 @@ public class PolicyPageController {
     @Autowired
     PolicyService policyService;
 
-
-
     @RequestMapping(value = {"/chinh-sach/{slug}",})
     public String policyDetailsPageAction(Model model, @PathVariable String slug){
         Policy policy = policyService.getBySlug(slug);

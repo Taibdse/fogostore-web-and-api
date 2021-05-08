@@ -27,6 +27,7 @@ public class ProductDto implements Serializable {
     private boolean hot;
     private boolean isNew;
     private Integer sortIndex;
+    private String techInfo;
 
     private List<Category> categories;
     private List<Brand> brands;

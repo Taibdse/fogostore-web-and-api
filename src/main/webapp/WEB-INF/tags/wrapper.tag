@@ -12,6 +12,7 @@
     <div id="page-content">
         <jsp:doBody/>
     </div>
+    <c:import url="../inc/tel.jsp"/>
     <!--  END Page Content -->
 </div>
 <c:import url="../inc/footer.jsp"/>

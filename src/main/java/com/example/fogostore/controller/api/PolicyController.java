@@ -19,36 +19,36 @@ public class PolicyController {
     PolicyService policyService;
 
     @GetMapping("/id/{id}")
-    public ResponseEntity getById(@PathVariable Integer id){
+    public ResponseEntity getById(@PathVariable Integer id) {
         Policy policy = policyService.getById(id);
         return ResponseEntity.ok(policy);
     }
 
     @GetMapping("/getActive")
-    public ResponseEntity getAllActive(){
+    public ResponseEntity getAllActive() {
         return ResponseEntity.ok(policyService.getAllActive());
     }
 
     @GetMapping("/slug/{slug}")
-    public ResponseEntity getAllActive(@PathVariable String slug){
+    public ResponseEntity getAllActive(@PathVariable String slug) {
         Policy policy = policyService.getBySlug(slug);
         return ResponseEntity.ok(policy);
     }
 
     @PostMapping("")
-    public ResponseEntity create(@RequestBody Policy policy){
+    public ResponseEntity create(@RequestBody Policy policy) {
         ResultBuilder result = policyService.create(policy);
         return ResponseEntity.ok(result);
     }
 
     @PutMapping("")
-    public ResponseEntity update(@RequestBody Policy policy){
+    public ResponseEntity update(@RequestBody Policy policy) {
         ResultBuilder result = policyService.update(policy);
         return ResponseEntity.ok(result);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable Integer id){
+    public ResponseEntity delete(@PathVariable Integer id) {
         ResultBuilder result = policyService.deleteById(id);
         return ResponseEntity.ok(result);
     }

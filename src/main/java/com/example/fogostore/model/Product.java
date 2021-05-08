@@ -28,4 +28,5 @@ public class Product {
     private boolean hot;
     private boolean isNew;
     private Integer sortIndex;
+    private String techInfo;
 }

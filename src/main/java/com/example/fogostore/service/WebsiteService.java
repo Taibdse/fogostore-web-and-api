@@ -16,12 +16,14 @@ import java.util.stream.Collectors;
 
 public interface WebsiteService {
     ResultBuilder update(WebsiteDto websiteDto);
+
     WebsiteDto getThelatest();
+
     WebsiteDto mapModelToDto(Website website);
 }
 
 @Service
-class WebsiteServiceImpl implements WebsiteService{
+class WebsiteServiceImpl implements WebsiteService {
 
     @Autowired
     ImageRepository imageRepository;
@@ -42,27 +44,27 @@ class WebsiteServiceImpl implements WebsiteService{
     private final String CUSTOMER_PARTNER_IMAGES_EXCEED_QUANTITY = "Ảnh đối tác khách hàng không quá 30 ảnh!";
     private final String SUB_BANNER_EMPTY = "Ảnh trang con không được để trống!";
 
-    private HashMap<String, String> validate(WebsiteDto websiteDto){
+    private HashMap<String, String> validate(WebsiteDto websiteDto) {
         HashMap<String, String> errors = new HashMap<>();
         Integer id = websiteDto.getId();
-        if(id == null){
+        if (id == null) {
             errors.put("NOTFOUND", NOTFOUND);
         } else {
             Website found = websiteRepository.findById(id).orElse(null);
-            if(found == null){
+            if (found == null) {
                 errors.put("NOTFOUND", NOTFOUND);
             } else {
-                if(websiteDto.getHomePageImages().size() == 0){
+                if (websiteDto.getHomePageImages().size() == 0) {
                     errors.put("HOME_BANNER_EMPTY", HOME_BANNER_EMPTY);
-                } else if(websiteDto.getHomePageImages().size() > 8){
+                } else if (websiteDto.getHomePageImages().size() > 8) {
                     errors.put("HOME_BANNER_EXCEED_QUANTITY", HOME_BANNER_EXCEED_QUANTITY);
                 }
-                if(websiteDto.getCustomerPartnerImages().size() == 0){
-                    errors.put("CUSTOMER_PARTNER_IMAGES_EMPTY", CUSTOMER_PARTNER_IMAGES_EMPTY);
-                } else if(websiteDto.getCustomerPartnerImages().size() > 30){
-                    errors.put("CUSTOMER_PARTNER_IMAGES_EXCEED_QUANTITY", CUSTOMER_PARTNER_IMAGES_EXCEED_QUANTITY);
-                }
-                if(StringUtils.isEmpty(websiteDto.getSubPageImage())){
+//                if(websiteDto.getCustomerPartnerImages().size() == 0){
+//                    errors.put("CUSTOMER_PARTNER_IMAGES_EMPTY", CUSTOMER_PARTNER_IMAGES_EMPTY);
+//                } else if(websiteDto.getCustomerPartnerImages().size() > 30){
+//                    errors.put("CUSTOMER_PARTNER_IMAGES_EXCEED_QUANTITY", CUSTOMER_PARTNER_IMAGES_EXCEED_QUANTITY);
+//                }
+                if (StringUtils.isEmpty(websiteDto.getSubPageImage())) {
                     errors.put("SUB_BANNER_EMPTY", SUB_BANNER_EMPTY);
                 }
             }
@@ -75,7 +77,7 @@ class WebsiteServiceImpl implements WebsiteService{
     public ResultBuilder update(WebsiteDto websiteDto) {
         ResultBuilder result = new ResultBuilder();
         HashMap<String, String> errors = validate(websiteDto);
-        if(errors.size() > 0){
+        if (errors.size() > 0) {
             return result.success(false).errors(errors);
         }
 
@@ -90,22 +92,22 @@ class WebsiteServiceImpl implements WebsiteService{
 
         List<Image> deletedImages = new ArrayList<>();
         homePageImages.stream().forEach(image -> {
-            if(!websiteDto.getHomePageImages().contains(image.getUrl())){
+            if (!websiteDto.getHomePageImages().contains(image.getUrl())) {
                 deletedImages.add(image);
             }
         });
         customerPartnerImages.stream().forEach(image -> {
-            if(!websiteDto.getCustomerPartnerImages().contains(image.getUrl())){
+            if (!websiteDto.getCustomerPartnerImages().contains(image.getUrl())) {
                 deletedImages.add(image);
             }
         });
-        if(subPagesImages.size() > 0){
-            if(!subPagesImages.get(0).getUrl().equals(websiteDto.getSubPageImage())){
+        if (subPagesImages.size() > 0) {
+            if (!subPagesImages.get(0).getUrl().equals(websiteDto.getSubPageImage())) {
                 deletedImages.add(subPagesImages.get(0));
             }
         }
-        if(logoWebsiteImages.size() > 0){
-            if(!logoWebsiteImages.get(0).getUrl().equals(websiteDto.getLogoWebsiteImage())){
+        if (logoWebsiteImages.size() > 0) {
+            if (!logoWebsiteImages.get(0).getUrl().equals(websiteDto.getLogoWebsiteImage())) {
                 deletedImages.add(logoWebsiteImages.get(0));
             }
         }
@@ -118,28 +120,28 @@ class WebsiteServiceImpl implements WebsiteService{
             Image found = homePageImages.stream().filter(image -> {
                 return image.getUrl().equals(homePageImage);
             }).findFirst().orElse(null);
-            if(found == null){
+            if (found == null) {
                 Image newImage = saveImageFile(homePageImage, ImageConstants.HOMEPAGE_BANNER, index++);
                 imageRepository.save(newImage);
             }
         }
 
-        for (String customerPartnerImage : websiteDto.getCustomerPartnerImages()) {
-            Image found = customerPartnerImages.stream().filter(image -> {
-                return image.getUrl().equals(customerPartnerImage);
-            }).findFirst().orElse(null);
-            if(found == null){
-                Image image = saveImageFile(customerPartnerImage, ImageConstants.CUSTOMER_PARTNER, index++);
-                imageRepository.save(image);
-            }
-        }
+//        for (String customerPartnerImage : websiteDto.getCustomerPartnerImages()) {
+//            Image found = customerPartnerImages.stream().filter(image -> {
+//                return image.getUrl().equals(customerPartnerImage);
+//            }).findFirst().orElse(null);
+//            if (found == null) {
+//                Image image = saveImageFile(customerPartnerImage, ImageConstants.CUSTOMER_PARTNER, index++);
+//                imageRepository.save(image);
+//            }
+//        }
 
-        if(subPagesImages.size() == 0 || !subPagesImages.get(0).getUrl().equals(websiteDto.getSubPageImage())){
+        if (subPagesImages.size() == 0 || !subPagesImages.get(0).getUrl().equals(websiteDto.getSubPageImage())) {
             Image subImage = saveImageFile(websiteDto.getSubPageImage(), ImageConstants.SUBPAGES_BANNER, index);
             imageRepository.save(subImage);
         }
 
-        if(logoWebsiteImages.size() == 0 || !logoWebsiteImages.get(0).getUrl().equals(websiteDto.getLogoWebsiteImage())){
+        if (logoWebsiteImages.size() == 0 || !logoWebsiteImages.get(0).getUrl().equals(websiteDto.getLogoWebsiteImage())) {
             Image logoWebsiteImage = saveImageFile(websiteDto.getLogoWebsiteImage(), ImageConstants.LOGO_WEBSITE, index);
             imageRepository.save(logoWebsiteImage);
         }
@@ -147,11 +149,11 @@ class WebsiteServiceImpl implements WebsiteService{
         return result.success(true).data(websiteDto);
     }
 
-    public Image saveImageFile(String dataUrl, String type, int index){
+    public Image saveImageFile(String dataUrl, String type, int index) {
         Image image = new Image();
         image.setType(type);
         image.setSortIndex(index);
-        if(fileUtils.isImageUrl(dataUrl) || StringUtils.isEmpty(dataUrl)){
+        if (fileUtils.isImageUrl(dataUrl) || StringUtils.isEmpty(dataUrl)) {
             image.setUrl(dataUrl);
         } else {
             HashMap<String, String> value = fileUtils.saveImage(dataUrl, type.toLowerCase() + "-" + index);
@@ -168,7 +170,7 @@ class WebsiteServiceImpl implements WebsiteService{
 
     @Override
     public WebsiteDto mapModelToDto(Website website) {
-        if(website == null) return null;
+        if (website == null) return null;
         WebsiteDto websiteDto = modelMapper.map(website, WebsiteDto.class);
         List<Image> homePageImages = imageRepository.findByType(ImageConstants.HOMEPAGE_BANNER);
         List<Image> subPageImages = imageRepository.findByType(ImageConstants.SUBPAGES_BANNER);

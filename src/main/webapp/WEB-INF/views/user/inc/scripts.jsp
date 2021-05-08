@@ -1,6 +1,4 @@
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="/assets/js/jquery.min.js"></script>
-<!-- All js library -->
 <script src="/assets/js/bootstrap/bootstrap.min.js"></script>
 <script src="/assets/js/jquery.flexslider-min.js"></script>
 <script src="/assets/js/owl.carousel.min.js"></script>
@@ -16,27 +14,4 @@
 <script src="/assets/js/imagesloaded.min.js"></script>
 <script src="/assets/js/pace.min.js"></script>
 <script src="/assets/js/main.js"></script>
-<script>
-    var gogostoreLogo = '${shop.logo}';
-</script>
-
-<%--<script src="/assets/js/main.js"></script>--%>
-<%--<script src="/assets/js/custom/constants.js"></script>--%>
-<%--<script src="/assets/js/custom/utils.js"></script>--%>
-<%--<script src="/assets/js/custom/services.js"></script>--%>
-<%--<script src="/assets/js/custom/modules/cart.js"></script>--%>
-<%--<script src="/assets/js/custom/modules/order.js"></script>--%>
-<%--<script src="/assets/js/custom/index.js"></script>--%>
-
-<%--<script>--%>
-<%--    $(function (){--%>
-<%--        var $searchForm = $('#searchForm');--%>
-<%--        $searchForm.on('submit', function (e){--%>
-<%--            e.preventDefault();--%>
-<%--            var search = $searchForm.find('input').val();--%>
-<%--            var origin = location.origin;--%>
-<%--            var url = origin + '/tim-san-pham?search=' + search;--%>
-<%--            location.href = url;--%>
-<%--        })--%>
-<%--    })--%>
-<%--</script>--%>
+<script src="/assets/js/custom/index.js"></script>

@@ -1,0 +1,65 @@
+:root {
+    --main-color: #DB3364
+}
+
+.mx-auto {
+    margin: auto !important;
+}
+
+.float-none {
+    float: none
+}
+
+.font-weight-bold {
+    font-weight: bold;
+}
+
+.d-block {
+    display: block;
+}
+
+.d-inline-block {
+    display: inline-block;
+}
+
+.float-right {
+    float: right;
+}
+
+.float-left {
+    float: left;
+}
+
+ul.pagination li.page-item {
+    cursor: pointer;
+}
+
+@media (min-width: 992px) {
+    .d-lg-block {
+        display: block !important;
+    }
+    .d-lg-none {
+        display: none !important;
+    }
+}
+
+ul.categories-list {
+    padding-top: 20px;
+}
+
+ul.categories-list li {
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+
+ul.categories-list li.active > a {
+    color: var(--main-color);
+}
+
+ul.categories-list a:hover {
+    color: var(--main-color) !important;
+}
+
+ul.categories-list li a {
+    color: black;
+}

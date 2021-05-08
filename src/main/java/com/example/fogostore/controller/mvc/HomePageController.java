@@ -34,11 +34,11 @@ public class HomePageController {
 
     @RequestMapping(value = {"/", "/trang-chu"})
     public String homeAction(Model model){
-//        int size = 10;
-//        List<ProductDto> hotPorducts = productService.getHotProducts();
-//        List<Category> categories = categoryService.getAllActive();
-//        categories = categories.stream().filter(category -> category.getParentId() == null).collect(Collectors.toList());
-//
+        int size = 10;
+        List<ProductDto> hotPorducts = productService.getHotProducts();
+        List<Category> categories = categoryService.getAllActive();
+        categories = categories.stream().filter(category -> category.getParentId() == null).collect(Collectors.toList());
+
 //        List<List<ProductDto>> products = new ArrayList<>();
 //        List<ProductDto> tempList = new ArrayList<>();
 //        for (int i = 0; i < hotPorducts.size(); i++){
@@ -50,13 +50,13 @@ public class HomePageController {
 //            tempList.add(hotPorducts.get(i));
 //        }
 //        products.add(tempList);
-//
-//
-//        model.addAttribute("categories", categories);
-//        model.addAttribute("hotProducts", products);
-//
-//        sharedMvcService.addSharedModelAttributes(model, PageType.HOME);
-//
+
+
+        model.addAttribute("categories", categories);
+        model.addAttribute("hotProducts", hotPorducts);
+
+        sharedMvcService.addSharedModelAttributes(model, PageType.HOME);
+
         return "user/pages/index";
     }
 }

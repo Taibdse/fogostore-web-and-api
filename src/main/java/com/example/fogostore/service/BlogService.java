@@ -38,7 +38,6 @@ public interface BlogService {
     ResultBuilder delete(Integer id);
     ResultBuilder deleteByIds(List<Integer> ids);
     Page<Blog> search(String blog, int page, int size);
-
     ResultBuilder saveSortIndexes(List<BlogDto> blogs);
 }
 
@@ -125,7 +124,7 @@ class BlogServiceImpl implements BlogService{
     public ResultBuilder create(BlogDto blog) {
 
         ResultBuilder result = ResultBuilder.build();
-        HashMap<String, String> errors = validate(blog, true);
+        HashMap<String, String> errors = validate(blog, false);
         if(errors.size() > 0) return result.success(false).errors(errors);
 
         Blog savedBlog = modelMapper.map(blog, Blog.class);

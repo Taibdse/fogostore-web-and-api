@@ -26,7 +26,7 @@ public class ServerConfig {
         TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory() {
             @Override
             protected void postProcessContext(Context context) {
-                if(sslEnabled){
+                if (sslEnabled) {
                     SecurityConstraint securityConstraint = new SecurityConstraint();
                     securityConstraint.setUserConstraint("CONFIDENTIAL");
                     SecurityCollection collection = new SecurityCollection();
@@ -36,7 +36,9 @@ public class ServerConfig {
                 }
             }
         };
-        tomcat.addAdditionalTomcatConnectors(getHttpConnector());
+        if (sslEnabled) {
+            tomcat.addAdditionalTomcatConnectors(getHttpConnector());
+        }
         return tomcat;
     }
 

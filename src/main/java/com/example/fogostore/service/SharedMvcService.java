@@ -57,7 +57,7 @@ class SharedMvcServiceImpl implements SharedMvcService {
         WebsiteDto website = websiteService.getThelatest();
         List<BasicPolicy> policies = policyService.getAllActive();
 
-        Map<Integer, Node> brandMap = brandService.getActiveTree();
+//        Map<Integer, Node> brandMap = brandService.getActiveTree();
         Map<Integer, Node> categoryMap = categoryService.getActiveTree();
 
         PageMetadataDto pageMetadata = new PageMetadataDto();
@@ -80,6 +80,7 @@ class SharedMvcServiceImpl implements SharedMvcService {
                     if (blog != null) {
                         PageMetadata p = pageMetadataRepository.findByBlogId(blog.getId());
                         if (p != null) {
+                            pageMetadata = modelMapper.map(p, PageMetadataDto.class);
                             pageMetadata.setImage(blog.getImage());
                         };
                     }
@@ -106,9 +107,9 @@ class SharedMvcServiceImpl implements SharedMvcService {
         model.addAttribute("pageMetadata", pageMetadata);
         model.addAttribute("website", website);
         model.addAttribute("shop", shop);
-        model.addAttribute("brandMap", brandMap);
+//        model.addAttribute("brandMap", brandMap);
         model.addAttribute("categoryMap", categoryMap);
         model.addAttribute("policies", policies);
-        viewService.create();
+//        viewService.create();
     }
 }
