@@ -1,13 +1,11 @@
 package com.example.fogostore.controller.mvc;
 
 import com.example.fogostore.common.enumeration.PageType;
+import com.example.fogostore.dto.BlogDto;
 import com.example.fogostore.dto.ProductDto;
 import com.example.fogostore.builder.ResultBuilder;
 import com.example.fogostore.model.Category;
-import com.example.fogostore.service.CategoryService;
-import com.example.fogostore.service.ProductService;
-import com.example.fogostore.service.SharedMvcService;
-import com.example.fogostore.service.WebsiteService;
+import com.example.fogostore.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,10 +30,14 @@ public class HomePageController {
     @Autowired
     WebsiteService websiteService;
 
+    @Autowired
+    BlogService blogService;
+
     @RequestMapping(value = {"/", "/trang-chu"})
     public String homeAction(Model model){
         int size = 10;
         List<ProductDto> hotPorducts = productService.getHotProducts();
+        List<BlogDto> hotBlogs = blogService.getHotBlogs();
         List<Category> categories = categoryService.getAllActive();
         categories = categories.stream().filter(category -> category.getParentId() == null).collect(Collectors.toList());
 
@@ -54,6 +56,7 @@ public class HomePageController {
 
         model.addAttribute("categories", categories);
         model.addAttribute("hotProducts", hotPorducts);
+        model.addAttribute("hotBlogs", hotBlogs);
 
         sharedMvcService.addSharedModelAttributes(model, PageType.HOME);
 

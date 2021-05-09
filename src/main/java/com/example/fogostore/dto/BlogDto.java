@@ -28,4 +28,5 @@ public class BlogDto implements Serializable {
     private boolean active;
     private PageMetadata pageMetadata;
     private Integer sortIndex;
+    private Boolean hot;
 }

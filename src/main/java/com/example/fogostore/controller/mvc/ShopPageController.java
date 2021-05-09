@@ -74,7 +74,7 @@ public class ShopPageController {
             category = categoryService.getBySlug(categorySlug);
         }
 
-        Page<ProductDto> productPage = productService.getByCategoryOrBrandSlug(categorySlug, page, 1, sortBy, "category");
+        Page<ProductDto> productPage = productService.getByCategoryOrBrandSlug(categorySlug, page, PageSize.PRODUCT_PAGE_SIZE, sortBy, "category");
 
         model.addAttribute("productPage", productPage);
         model.addAttribute("category", category);

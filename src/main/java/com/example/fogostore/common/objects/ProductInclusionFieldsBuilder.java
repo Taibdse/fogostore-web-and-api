@@ -12,11 +12,11 @@ public class ProductInclusionFieldsBuilder {
     private Boolean includeTagList = false;
     private Boolean includeSubImages = false;
 
-    public static ProductInclusionFieldsBuilder build(){
+    public static ProductInclusionFieldsBuilder build() {
         return new ProductInclusionFieldsBuilder();
     }
 
-    public ProductInclusionFieldsBuilder includeAll(){
+    public ProductInclusionFieldsBuilder includeAll() {
         this.setIncludePageMetadata(true);
         this.setIncludeBrandAndCategoryList(true);
         this.setIncludeProductTypeList(true);

@@ -22,6 +22,8 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query(value = "select * from product where id IN ?1 AND active = true AND available = true order by sortIndex asc", nativeQuery = true)
     List<Product> findByIdList(List<Integer> ids);
 
+
+
     @Query(value = "select * from product as p where active = true AND available = true AND " +
             "(select count(pt.id) from product_type as pt " +
             "where pt.productId = p.id and pt.oldPrice > 0 and pt.price < pt.oldPrice) > 0",
@@ -49,6 +51,9 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
             countQuery = "select count(id) from product where name like %?1% AND active = true AND available = true",
             nativeQuery = true)
     Page<Product> findBySearchValue(String searchValue, Pageable pageable);
+
+    @Query(value = "select * from product where name like %?1% AND active = true AND available = true order by sortIndex ASC", nativeQuery = true)
+    List<Product> findBySearchValue(String searchValue);
 
     @Query(value = "select * from product where active = true AND available = true",
             countQuery = "select COUNT(id) from product where active = true AND available = true",

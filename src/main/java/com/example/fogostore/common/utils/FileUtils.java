@@ -52,7 +52,7 @@ public class FileUtils {
 
     public String removeImageRootWeb(String url) {
         if (StringUtils.isEmpty(url)) return "";
-        return url.replace("https://fmanracing.com", "");
+        return url.replace("https://fogostore.vn", "");
     }
 
     public boolean isImage(byte[] decodedImage) {

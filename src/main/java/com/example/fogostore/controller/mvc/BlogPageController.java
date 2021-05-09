@@ -30,7 +30,7 @@ public class BlogPageController {
         sharedMvcService.addSharedModelAttributes(model, PageType.BLOGS);
         Page<Blog> blogPage = blogService.search("", page, size);
         model.addAttribute("blogPage", blogPage);
-        return "user/pages/blog";
+        return "user/pages/blogs";
     }
 
     @RequestMapping(value = {"/bai-viet/{slug}",})

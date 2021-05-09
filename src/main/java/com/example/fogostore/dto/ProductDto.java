@@ -41,23 +41,16 @@ public class ProductDto implements Serializable {
     private List<ProductType> productTypes;
     private PageMetadata pageMetadata;
 
-    @JsonIgnore
-    public Double getPrice(){
-        if(productTypes.size() > 0){
+    public Double getPrice() {
+        if (productTypes != null && productTypes.size() > 0) {
             return productTypes.get(0).getPrice();
         }
         return newPrice;
     }
 
     @JsonIgnore
-    public Double getOlderPrice(){
-        if(productTypes.size() > 0) return productTypes.get(0).getOldPrice();
-        return oldPrice;
-    }
-
-    @JsonIgnore
-    public ProductType getType(){
-        if(productTypes.size() > 0){
+    public ProductType getType() {
+        if (productTypes.size() > 0) {
             return productTypes.get(0);
         }
         return null;

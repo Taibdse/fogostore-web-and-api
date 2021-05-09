@@ -344,7 +344,8 @@ $(document).ready(function($) {
         $(".post-gallery, .project-gallery").owlCarousel({
             center: true,
             items:1,
-            loop:true
+            loop:true,
+            autoplay: true
         });
         $(".image-carousel").owlCarousel({
             loop:true,

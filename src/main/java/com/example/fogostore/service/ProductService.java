@@ -48,6 +48,8 @@ public interface ProductService {
     Page<ProductDto> getDiscountProducts(int page, int size);
 
     Page<ProductDto> searchProducts(String search, int categoryId, int brandId, int page, int size, Boolean forAdmin);
+
+    List<ProductDto> getSuggestedProducts(String keyword);
 }
 
 @Service
@@ -95,6 +97,7 @@ class ProductServiceImpl implements ProductService {
     private final String PRODUCT_NOTFOUND = "không tìm thấy sản phẩm này!";
     private final String CATEGORY_TYPE = "CATEGORY_TYPE";
     private final String BRAND_TYPE = "BRAND_TYPE";
+
 
     @Override
     public ResultBuilder saveSortIndexes(List<ProductDto> productDtos) {
@@ -444,8 +447,9 @@ class ProductServiceImpl implements ProductService {
 
     public ProductDto toDto(Product product, ProductInclusionFieldsBuilder productInclusionFieldsBuilder) {
         ProductDto productDto = modelMapper.map(product, ProductDto.class);
-        if (productInclusionFieldsBuilder == null)
+        if (productInclusionFieldsBuilder == null) {
             productInclusionFieldsBuilder = ProductInclusionFieldsBuilder.build();
+        }
 
         List<Image> images = imageRepository.findByProductId(product.getId());
 
@@ -548,5 +552,11 @@ class ProductServiceImpl implements ProductService {
                 return toDto(product, productInclusionFieldsBuilder);
             }
         });
+    }
+
+    @Override
+    public List<ProductDto> getSuggestedProducts(String keyword) {
+        List<Product> products = productRepository.findBySearchValue(keyword);
+        return products.stream().map(p -> toDto(p, null)).collect(Collectors.toList());
     }
 }

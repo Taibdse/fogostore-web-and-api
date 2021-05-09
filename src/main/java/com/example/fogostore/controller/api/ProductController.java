@@ -36,6 +36,11 @@ public class ProductController {
         return ResponseEntity.ok(productDtos);
     }
 
+    @GetMapping("/end-user/suggestions")
+    public List<ProductDto> getSuggestedProducts(@RequestParam String keyword){
+        return productService.getSuggestedProducts(keyword);
+    }
+
     @PostMapping("")
     public ResponseEntity create(@RequestBody ProductDto productDto){
         return ResponseEntity.ok(productService.create(productDto));

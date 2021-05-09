@@ -30,6 +30,7 @@ public class Blog {
     private Date updatedAt;
     private boolean active;
     private Integer sortIndex;
+    private Boolean hot;
 
     @PrePersist
     public void prePersist() {

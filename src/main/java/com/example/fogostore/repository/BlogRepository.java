@@ -18,6 +18,9 @@ public interface BlogRepository extends JpaRepository<Blog, Integer> {
     @Query(value = "select * from blog where active = true", nativeQuery = true)
     List<Blog> findAllActive();
 
+    @Query(value = "select * from blog where active = true and hot = true order by sortIndex asc", nativeQuery = true)
+    List<Blog> findByHot();
+
     @Query(value = "select * from blog where title like %?1% AND active = true",
             countQuery = "select count(id) from blog where title like %?1% AND active = true", nativeQuery = true)
     Page<Blog> findByAdmin(String blog, Pageable pageable);

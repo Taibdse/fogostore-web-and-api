@@ -32,13 +32,14 @@ import java.util.stream.Collectors;
 public interface BlogService {
     BlogDto getById(Integer id);
     BlogDto getBySlug(String slug);
-    BlogDto toDto(Blog blog);
+    BlogDto toDto(Blog blog, Boolean includeDetails);
     ResultBuilder create(BlogDto blog);
     ResultBuilder update(BlogDto blog);
     ResultBuilder delete(Integer id);
     ResultBuilder deleteByIds(List<Integer> ids);
     Page<Blog> search(String blog, int page, int size);
     ResultBuilder saveSortIndexes(List<BlogDto> blogs);
+    List<BlogDto> getHotBlogs();
 }
 
 @Service
@@ -60,6 +61,12 @@ class BlogServiceImpl implements BlogService{
     private final String NOTFOUND = "Không tìm thấy bài viết này";
 
     @Override
+    public List<BlogDto> getHotBlogs() {
+        List<Blog> blogs = blogRepository.findByHot();
+        return blogs.stream().map(b -> toDto(b, false)).collect(Collectors.toList());
+    }
+
+    @Override
     public ResultBuilder saveSortIndexes(List<BlogDto> blogs) {
         for (BlogDto blogDto : blogs) {
             blogRepository.updateSortIndexById(blogDto.getId(), blogDto.getSortIndex());
@@ -74,10 +81,12 @@ class BlogServiceImpl implements BlogService{
     }
 
     @Override
-    public BlogDto toDto(Blog blog) {
+    public BlogDto toDto(Blog blog, Boolean includeDetails) {
         if(blog == null) return null;
         BlogDto blogDto = modelMapper.map(blog, BlogDto.class);
-        blogDto.setPageMetadata(pageMetadataRepository.findByBlogId(blog.getId()));
+        if(includeDetails) {
+            blogDto.setPageMetadata(pageMetadataRepository.findByBlogId(blog.getId()));
+        }
         return blogDto;
     }
 
@@ -86,7 +95,7 @@ class BlogServiceImpl implements BlogService{
         try{
             Blog blog = blogRepository.findById(id).orElse(null);
             if(blog == null || !blog.isActive()) return null;
-            return toDto(blog);
+            return toDto(blog, true);
         } catch (Exception ex){
             return null;
         }
@@ -97,7 +106,7 @@ class BlogServiceImpl implements BlogService{
         try{
             Blog blog = blogRepository.findBySlug(slug);
             if(blog == null || !blog.isActive()) return null;
-            return toDto(blog);
+            return toDto(blog, true);
         } catch (Exception ex){
             return null;
         }

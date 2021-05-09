@@ -100,7 +100,7 @@
                                     <li class="submenu">
                                         <a href="javascript:void(0)">Journal</a>
                                         <ul class="sub-menu">
-                                            <li><a href="blog.jsp">Journal Classic</a></li>
+                                            <li><a href="blogs.jsp">Journal Classic</a></li>
                                             <li><a href="blog-minimal.jsp">Journal Minimal</a></li>
                                             <li><a href="single-post.jsp">Post</a></li>
                                             <li><a href="single-post-slider.jsp">Post Slider</a></li>
