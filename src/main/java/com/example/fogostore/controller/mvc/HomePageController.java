@@ -2,8 +2,7 @@ package com.example.fogostore.controller.mvc;
 
 import com.example.fogostore.common.enumeration.PageType;
 import com.example.fogostore.dto.BlogDto;
-import com.example.fogostore.dto.ProductDto;
-import com.example.fogostore.builder.ResultBuilder;
+import com.example.fogostore.dto.product.ProductDto;
 import com.example.fogostore.model.Category;
 import com.example.fogostore.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

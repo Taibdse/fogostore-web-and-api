@@ -16,12 +16,6 @@
             <div id="sidemenu">
                 <div class="menu-holder">
                     <ul>
-                        <li>
-                            <a href="/trang-chu">Trang chủ</a>
-                        </li>
-                        <li>
-                            <a href="/ve-chung-toi">Giới thiệu</a>
-                        </li>
                         <c:forEach items="${categoryMap}" var="categoryNode">
                             <li class="submenu">
                                 <a href="/danh-muc/${categoryNode.value.value.slug}">${categoryNode.value.value.name}</a>
@@ -36,9 +30,6 @@
                                 </c:if>
                             </li>
                         </c:forEach>
-                        <li>
-                            <a href="/bai-viet">Bài viết</a>
-                        </li>
                     </ul>
                 </div>
             </div>

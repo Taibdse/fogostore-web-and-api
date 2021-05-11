@@ -1,4 +1,4 @@
-package com.example.fmanracing.dto;
+package com.example.fogostore.dto.product;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

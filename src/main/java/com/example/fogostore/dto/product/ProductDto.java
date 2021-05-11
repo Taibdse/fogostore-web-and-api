@@ -1,6 +1,5 @@
-package com.example.fogostore.dto;
+package com.example.fogostore.dto.product;
 
-import com.example.fogostore.common.utils.CustomStringUtils;
 import com.example.fogostore.model.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -28,6 +27,7 @@ public class ProductDto implements Serializable {
     private boolean isNew;
     private Integer sortIndex;
     private String techInfo;
+    private String relatedProductIds;
 
     private List<Category> categories;
     private List<Brand> brands;
@@ -40,6 +40,7 @@ public class ProductDto implements Serializable {
     private List<Integer> tagIds;
     private List<ProductType> productTypes;
     private PageMetadata pageMetadata;
+    private List<ProductDto> relatedProducts;
 
     public Double getPrice() {
         if (productTypes != null && productTypes.size() > 0) {

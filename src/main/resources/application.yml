@@ -13,7 +13,7 @@ server:
     key-store-type: PKCS12
     key-password: fogostore@123
     enabled: false
-image_folder_path: C:\Users\Admin\Desktop\project\fogostore\images
+image_folder_path: C:\Users\Admin\Desktop\project\fogostore\backup\20210510\images
 sitemap_location: C:\Users\Admin\Desktop\project\fogostore\sitemap
 domain_name: http://localhost:5004
 ---

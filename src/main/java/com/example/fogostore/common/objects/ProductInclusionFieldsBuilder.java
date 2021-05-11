@@ -6,11 +6,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ProductInclusionFieldsBuilder {
+    private Boolean includeProductTypeList = true;
     private Boolean includePageMetadata = false;
     private Boolean includeBrandAndCategoryList = false;
-    private Boolean includeProductTypeList = true;
     private Boolean includeTagList = false;
     private Boolean includeSubImages = false;
+    private Boolean includeRelatedProducts = false;
 
     public static ProductInclusionFieldsBuilder build() {
         return new ProductInclusionFieldsBuilder();
@@ -22,6 +23,7 @@ public class ProductInclusionFieldsBuilder {
         this.setIncludeProductTypeList(true);
         this.setIncludeTagList(true);
         this.setIncludeSubImages(true);
+        this.setIncludeRelatedProducts(true);
         return this;
     }
 }

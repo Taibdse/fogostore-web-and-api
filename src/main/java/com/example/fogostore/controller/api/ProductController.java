@@ -1,8 +1,7 @@
 package com.example.fogostore.controller.api;
 
-import com.example.fogostore.dto.ProductDto;
+import com.example.fogostore.dto.product.ProductDto;
 
-import com.example.fogostore.builder.ResultBuilder;
 import com.example.fogostore.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -94,5 +93,10 @@ public class ProductController {
         Integer categoryId = 0;
         Integer brandId = 0;
         return ResponseEntity.ok(productService.searchProducts(searchKeyword, categoryId, brandId, page, size, false));
+    }
+
+    @GetMapping("/all-basic")
+    public ResponseEntity getProductById(){
+        return ResponseEntity.ok(productService.getAllBasicProducts());
     }
 }

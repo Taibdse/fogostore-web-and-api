@@ -15,22 +15,27 @@
     <div class="clearfix"></div>
 
     <div id="home-wrap" class="content-section" style="margin-top: 70px">
-        <h3 class="text-center">Danh mục</h3>
-        <div class="container" style="margin-bottom: 30px">
-            <c:forEach items="${categoryMap}" var="categoryMapItem">
-                <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 px-0">
-                    <h4>
-                        <a href="/danh-muc/${categoryMapItem.value.value.slug}">${categoryMapItem.value.value.name}</a>
-                    </h4>
-                    <ul class="categories-list">
-                        <c:forEach items="${categoryMapItem.value.children}" var="childCate">
-                            <li>
-                                <a href="/danh-muc/${childCate.value.slug}">${childCate.value.name}</a>
-                            </li>
-                        </c:forEach>
-                    </ul>
+        <div class="container" style="margin-bottom: 50px; margin-top: 70px">
+            <section id="projects" data-isotope="load-simple" class="page padding-top-null padding-onlybottom-lg">
+                <div class="projects-items equal three-columns">
+                    <c:forEach items="${categoryMap}" var="categoryMapItem">
+                        <a href="/danh-muc/${categoryMapItem.value.value.slug}">
+                            <div class="single-item shop one-item design branding">
+                                <div class="item">
+                                    <img src="${categoryMapItem.value.value.image}" alt="${categoryMapItem.value.value.name}">
+                                    <div class="content">
+                                        <div style="margin-bottom: 10px" class="text-center">
+                                            <h5 class="font-weight-bold"
+                                                style="font-size: 0.9em">${categoryMapItem.value.value.name}</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </c:forEach>
                 </div>
-            </c:forEach>
+            </section>
+
             <div class="clearfix"></div>
             <hr style="border: 2px solid #ccc"/>
         </div>
@@ -44,25 +49,29 @@
                     </c:forEach>
                 </div>
             </section>
-            <hr style="border: 2px solid #ccc"/>
+            <c:if test="${hotBlogs.size() > 0}">
+                <hr style="border: 2px solid #ccc"/>
+            </c:if>
         </div>
 
         <c:if test="${hotBlogs.size() > 0}">
             <h3 class="text-center">Bài viết hay</h3>
             <div class="container">
                 <section id="news" class="page">
-                    <div class="news-items equal four-columns">
+                    <div class="three-item-gallery">
                         <c:forEach items="${hotBlogs}" var="blog">
-                            <div class="single-news one-item">
-                                <a href="/bai-viet/${blog.slug}">
-                                    <article>
-                                        <img src="${blog.image}" alt="${blog.title}">
-                                        <div class="content">
-                                            <h3>${blog.title}</h3>
-                                            <p>${blog.shortDescription}</p>
-                                        </div>
-                                    </article>
-                                </a>
+                            <div class="item">
+                                <div class="single-news one-item">
+                                    <a href="/bai-viet/${blog.slug}">
+                                        <article>
+                                            <img src="${blog.image}" alt="${blog.title}">
+                                            <div class="content">
+                                                <h3>${blog.title}</h3>
+                                                <p>${blog.shortDescription}</p>
+                                            </div>
+                                        </article>
+                                    </a>
+                                </div>
                             </div>
                         </c:forEach>
                     </div>

@@ -1,8 +1,7 @@
 package com.example.fogostore.controller.api;
 
 import com.example.fogostore.common.constants.OrderSortBy;
-import com.example.fogostore.dto.OrderDto;
-import com.example.fogostore.builder.ResultBuilder;
+import com.example.fogostore.dto.order.OrderDto;
 import com.example.fogostore.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

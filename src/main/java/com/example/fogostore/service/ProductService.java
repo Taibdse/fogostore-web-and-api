@@ -6,7 +6,8 @@ import com.example.fogostore.common.enumeration.PageType;
 import com.example.fogostore.common.objects.ProductInclusionFieldsBuilder;
 import com.example.fogostore.common.utils.CustomStringUtils;
 import com.example.fogostore.common.utils.FileUtils;
-import com.example.fogostore.dto.ProductDto;
+import com.example.fogostore.dto.product.BasicProduct;
+import com.example.fogostore.dto.product.ProductDto;
 import com.example.fogostore.builder.ResultBuilder;
 import com.example.fogostore.model.*;
 import com.example.fogostore.repository.*;
@@ -50,6 +51,8 @@ public interface ProductService {
     Page<ProductDto> searchProducts(String search, int categoryId, int brandId, int page, int size, Boolean forAdmin);
 
     List<ProductDto> getSuggestedProducts(String keyword);
+
+    List<BasicProduct> getAllBasicProducts();
 }
 
 @Service
@@ -98,6 +101,10 @@ class ProductServiceImpl implements ProductService {
     private final String CATEGORY_TYPE = "CATEGORY_TYPE";
     private final String BRAND_TYPE = "BRAND_TYPE";
 
+    @Override
+    public List<BasicProduct> getAllBasicProducts() {
+        return productRepository.findAllActive();
+    }
 
     @Override
     public ResultBuilder saveSortIndexes(List<ProductDto> productDtos) {
@@ -498,6 +505,19 @@ class ProductServiceImpl implements ProductService {
 
         if (productInclusionFieldsBuilder.getIncludePageMetadata()) {
             productDto.setPageMetadata(pageMetadataRepository.findByProductId(product.getId()));
+        }
+
+        if (productInclusionFieldsBuilder.getIncludeRelatedProducts()) {
+            String relatedProductIds = product.getRelatedProductIds();
+            if (!StringUtils.isEmpty(relatedProductIds)) {
+                List<ProductDto> relatedProducts = new ArrayList<>();
+                for (String s : relatedProductIds.split(",")) {
+                    Integer id = Integer.parseInt(s);
+                    Product p = productRepository.findById(id).orElse(null);
+                    if (p != null && p.isActive()) relatedProducts.add(toDto(p, null));
+                }
+                productDto.setRelatedProducts(relatedProducts);
+            }
         }
 
         return productDto;

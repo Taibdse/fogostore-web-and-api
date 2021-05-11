@@ -29,4 +29,5 @@ public class Product {
     private boolean isNew;
     private Integer sortIndex;
     private String techInfo;
+    private String relatedProductIds;
 }

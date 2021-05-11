@@ -94,6 +94,23 @@
                 </div>
             </div>
 
+            <c:if test="${product.relatedProducts.size() > 0}">
+                <div class="container">
+                    <div class="row no-margin wrap-text">
+                        <h4>Sản phẩm liên quan</h4>
+                        <div class="product-gallery">
+                            <c:forEach items="${product.relatedProducts}" var="relatedProduct">
+                                <div class="item">
+                                    <a href="/san-pham/${relatedProduct.slug}">
+                                        <layout:product product="${relatedProduct}" />
+                                    </a>
+                                </div>
+                            </c:forEach>
+                        </div>
+                    </div>
+                </div>
+            </c:if>
+
             <div class="row no-margin">
                 <div class="border-separator"></div>
             </div>

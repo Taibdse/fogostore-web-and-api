@@ -37,8 +37,8 @@ public class FileUtils {
 
             if (isImageOverSized(base64, 1)) errors.put("image", "Size Ảnh không được quá 1MB");
             else {
-                byte[] decodedMainImage = getByteArrayFromImageDataUri(base64);
-                if (!isImage(decodedMainImage)) errors.put("image", "Chỉ được upload ảnh!");
+//                byte[] decodedMainImage = getByteArrayFromImageDataUri(base64);
+                if (!isImage(base64)) errors.put("image", "Chỉ được upload ảnh!");
             }
         }
         return errors;
@@ -63,6 +63,12 @@ public class FileUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return false;
+    }
+
+    public boolean isImage(String base64) {
+        if(StringUtils.isEmpty(base64)) return false;
+        if(base64.indexOf("data:image/") > -1) return true;
         return false;
     }
 

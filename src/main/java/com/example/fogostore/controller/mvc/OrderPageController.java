@@ -1,8 +1,7 @@
 package com.example.fogostore.controller.mvc;
 
 import com.example.fogostore.common.enumeration.PageType;
-import com.example.fogostore.dto.OrderDto;
-import com.example.fogostore.builder.ResultBuilder;
+import com.example.fogostore.dto.order.OrderDto;
 import com.example.fogostore.service.OrderService;
 import com.example.fogostore.service.SharedMvcService;
 import org.springframework.beans.factory.annotation.Autowired;

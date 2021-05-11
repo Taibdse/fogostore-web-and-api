@@ -1,6 +1,8 @@
 package com.example.fogostore.repository;
 
 
+import com.example.fogostore.dto.policy.BasicPolicy;
+import com.example.fogostore.dto.product.BasicProduct;
 import com.example.fogostore.model.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -104,4 +106,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
                     "ON A.productId = B.productId))",
             nativeQuery = true)
     Page<Product> findByEndUser(String search, List<Integer> categoryIds, List<Integer> brandIds, Pageable pageable);
+
+    @Query(value = "select id, name, slug, active from product where active = true", nativeQuery = true)
+    List<BasicProduct> findAllActive();
 }

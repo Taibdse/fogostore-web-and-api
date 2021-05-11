@@ -1,4 +1,4 @@
-package com.example.fogostore.dto;
+package com.example.fogostore.dto.order;
 
 import com.example.fogostore.common.utils.CustomStringUtils;
 import com.example.fogostore.model.ProductType;

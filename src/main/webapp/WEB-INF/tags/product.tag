@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ tag pageEncoding="UTF-8" trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="layout" tagdir="/WEB-INF/tags" %>
-<%@ attribute name="product" type="com.example.fogostore.dto.ProductDto" %>
+<%@ attribute name="product" type="com.example.fogostore.dto.product.ProductDto" %>
 
 <div class="single-item shop one-item design branding">
     <div class="item">

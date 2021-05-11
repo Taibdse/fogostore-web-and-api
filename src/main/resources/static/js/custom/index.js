@@ -4,6 +4,35 @@ var $searchProductInput;
 $(function () {
     addActiveClassToMenu();
     bindEventsChangeCollapseIcon();
+
+    $(".product-gallery").owlCarousel({
+        loop: true,
+        autoplay: true,
+        responsive : {
+            0:{
+                items:2,
+            },
+            767 : {
+                items: 3
+            },
+            900 : {
+                items: 4
+            }
+        }
+    });
+
+    $(".three-item-gallery").owlCarousel({
+        loop: true,
+        autoplay: true,
+        responsive : {
+            0:{
+                items:2,
+            },
+            767 : {
+                items: 3
+            },
+        }
+    });
 });
 
 function bindEventsChangeCollapseIcon() {

@@ -4,6 +4,7 @@ import com.example.fogostore.common.enumeration.PageType;
 import com.example.fogostore.common.utils.tree.Node;
 import com.example.fogostore.dto.*;
 import com.example.fogostore.dto.policy.BasicPolicy;
+import com.example.fogostore.dto.product.ProductDto;
 import com.example.fogostore.model.*;
 import com.example.fogostore.repository.CategoryRepository;
 import com.example.fogostore.repository.PageMetadataRepository;

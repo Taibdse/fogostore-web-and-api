@@ -3,10 +3,8 @@ package com.example.fogostore.controller.mvc;
 import com.example.fogostore.common.constants.PageSize;
 import com.example.fogostore.common.constants.ProductSortBy;
 import com.example.fogostore.common.enumeration.PageType;
-import com.example.fogostore.common.utils.tree.Node;
 import com.example.fogostore.dto.CategoryDto;
-import com.example.fogostore.dto.ProductDto;
-import com.example.fogostore.model.Brand;
+import com.example.fogostore.dto.product.ProductDto;
 import com.example.fogostore.model.Category;
 import com.example.fogostore.service.BrandService;
 import com.example.fogostore.service.CategoryService;
@@ -22,9 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 public class ShopPageController {

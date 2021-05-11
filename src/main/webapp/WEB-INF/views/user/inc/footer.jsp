@@ -17,7 +17,7 @@
 <footer>
     <div class="container">
         <div class="row no-margin">
-            <div class="col-lg-4 col-md-6 col-6 text">
+            <div class="col-lg-3 col-md-6 col-6 text">
                 <h5>CHÍNH SÁCH KHÁCH HÀNG</h5>
                 <ul class="list-group">
                     <c:forEach items="${policies}" var="policy">
@@ -25,7 +25,21 @@
                     </c:forEach>
                 </ul>
             </div>
-            <div class="col-lg-4 col-md-6 col-6 text">
+            <div class="col-lg-3 col-md-6 col-6 text">
+                <h5>MENU</h5>
+                <ul class="list-group">
+                    <li>
+                        <a href="/trang-chu">Trang chủ</a>
+                    </li>
+                    <li>
+                        <a href="/ve-chung-toi">Giới thiệu</a>
+                    </li>
+                    <li>
+                        <a href="/bai-viet">Bài viết</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-lg-3 col-md-6 col-6 text">
                 <h5>LIÊN HỆ CHÚNG TÔI</h5>
                 <ul class="list-group">
                     <li>
@@ -46,7 +60,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="col-lg-4 col-md-6 col-6 text">
+            <div class="col-lg-3 col-md-6 col-6 text">
                 <h5>MẠNG XÃ HỘI</h5>
                 <ul class="social text-left">
                     <li><a href="${shop.facebookLink}" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
