@@ -2,14 +2,17 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" trimDirectiveWhitespaces="true" %>
 <style>
     footer h5 {
-        margin-bottom: 20px!important;
+        margin-bottom: 20px !important;
     }
+
     footer a {
         color: black;
     }
+
     footer ul.list-group li {
-        margin-bottom: 10px!important;
+        margin-bottom: 10px !important;
     }
+
     footer ul.social {
         float: none;
     }
@@ -63,9 +66,18 @@
             <div class="col-lg-3 col-md-6 col-6 text">
                 <h5>MẠNG XÃ HỘI</h5>
                 <ul class="social text-left">
-                    <li><a href="${shop.facebookLink}" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
-                    <li><a href="${shop.youtubeLink}" target="_blank"><i class="fa fa-youtube" aria-hidden="true"></i></a></li>
-                    <li><a href="${shop.instagramLink}" target="_blank"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+                    <li><a href="${shop.facebookLink}" target="_blank">
+                        <img style="width: 30px" src="/assets/img/fb.png" alt="/assets/img/fb.png">
+                    </a></li>
+                    <li><a href="${shop.youtubeLink}" target="_blank">
+                        <img style="width: 30px" src="/assets/img/youtube.png" alt="/assets/img/youtube.png">
+                    </a></li>
+                    <li><a href="${shop.instagramLink}" target="_blank">
+                        <img style="width: 30px" src="/assets/img/instagram.png" alt="/assets/img/instagram.png">
+                    </a></li>
+                    <li><a href="${shop.instagramLink}" target="_blank">
+                        <img style="width: 30px" src="/assets/img/zalo.png" alt="/assets/img/zalo.png">
+                    </a></li>
                 </ul>
             </div>
         </div>
