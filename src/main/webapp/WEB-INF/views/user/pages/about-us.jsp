@@ -3,7 +3,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <layout:wrapper>
-    <layout:page-header title="Về chúng tôi" />
+<%--    <layout:page-header title="Về chúng tôi" />--%>
     <div id="home-wrap" class="content-section">
         <div class="container" style="margin-top: 30px; margin-bottom: 30px">
             <div class="row">

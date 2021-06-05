@@ -3,7 +3,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <layout:wrapper>
-    <layout:page-header title="Bài viết"/>
+<%--    <layout:page-header title="Bài viết"/>--%>
     <div id="home-wrap" class="content-section">
         <div class="container">
             <div class="row no-margin wrap-text">
@@ -14,13 +14,13 @@
                     <c:if test="${blogPage.content.size() > 0}">
                         <div class="news-items equal three-columns">
                             <c:forEach items="${blogPage.content}" var="blog">
-                                <div class="single-news one-item">
+                                <div class="single-news one-item blog-item">
                                     <a href="/bai-viet/${blog.slug}">
                                         <article>
                                             <img src="${blog.image}" alt="${blog.title}">
                                             <div class="content">
-                                                <h3>${blog.title}</h3>
-                                                <p>${blog.shortDescription}</p>
+                                                <h4 class="title">${blog.title}</h4>
+                                                <small class="short-content">${blog.shortDescription}</small>
                                             </div>
                                         </article>
                                     </a>

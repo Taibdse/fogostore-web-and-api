@@ -24,12 +24,12 @@
     <meta property="og:site_name" content="Fogostore"/>
     <meta property="og:url" content="https://fogostore.vn${requestScope['javax.servlet.forward.request_uri']}"/>
     <c:if test="${pageMetadata.pageType == PageType.PRODUCT_DETAIL}">
-        <meta property="og:price:amount" content="${pageMetadata.productPrice}">
-        <meta property="og:price:currency" content="VND">
-        <meta property="product:brand" content="FOGOSTORE">
-        <meta property="product:availability" content="in stock">
-        <meta property="product:condition" content="new">
-        <meta property="product:retailer_item_id" content="${pageMetadata.productId}">
+    <meta property="og:price:amount" content="${pageMetadata.productPrice}">
+    <meta property="og:price:currency" content="VND">
+    <meta property="product:brand" content="FOGOSTORE">
+    <meta property="product:availability" content="in stock">
+    <meta property="product:condition" content="new">
+    <meta property="product:retailer_item_id" content="${pageMetadata.productId}">
     </c:if>
     <meta property="twitter:title" content="${pageMetadata.title}">
     <meta property="twitter:url" content="https://fogostore.vn${requestScope['javax.servlet.forward.request_uri']}">
@@ -57,4 +57,34 @@
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+
+    <meta name="google-site-verification" content="HpdxbIklHmu0JgIPOLhlLkR4bojRTLUl3sF8ft7pWs8" />
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-W5N4L61Z8N"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-W5N4L61Z8N');
+    </script>
+
+    <!-- Facebook Pixel Code -->
+    <script>
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+            n.queue=[];t=b.createElement(e);t.async=!0;
+            t.src=v;s=b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t,s)}(window, document,'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '756398141853789');
+        fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+                   src="https://www.facebook.com/tr?id=756398141853789&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Facebook Pixel Code -->
 </head>

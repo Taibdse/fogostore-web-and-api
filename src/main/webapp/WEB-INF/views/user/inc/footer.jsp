@@ -20,7 +20,7 @@
 <footer>
     <div class="container">
         <div class="row no-margin">
-            <div class="col-lg-3 col-md-6 col-6 text">
+            <div class="col-lg-3 col-md-6 col-6 text px-1">
                 <h5>CHÍNH SÁCH KHÁCH HÀNG</h5>
                 <ul class="list-group">
                     <c:forEach items="${policies}" var="policy">
@@ -28,7 +28,7 @@
                     </c:forEach>
                 </ul>
             </div>
-            <div class="col-lg-3 col-md-6 col-6 text">
+            <div class="col-lg-2 col-md-6 col-6 text px-1">
                 <h5>MENU</h5>
                 <ul class="list-group">
                     <li>
@@ -42,7 +42,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="col-lg-3 col-md-6 col-6 text">
+            <div class="col-lg-4 col-md-6 col-6 text px-1">
                 <h5>LIÊN HỆ CHÚNG TÔI</h5>
                 <ul class="list-group">
                     <li>
@@ -63,7 +63,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="col-lg-3 col-md-6 col-6 text">
+            <div class="col-lg-3 col-md-6 col-6 text px-1">
                 <h5>MẠNG XÃ HỘI</h5>
                 <ul class="social text-left">
                     <li><a href="${shop.facebookLink}" target="_blank">
@@ -75,7 +75,7 @@
                     <li><a href="${shop.instagramLink}" target="_blank">
                         <img style="width: 30px" src="/assets/img/instagram.png" alt="/assets/img/instagram.png">
                     </a></li>
-                    <li><a href="${shop.instagramLink}" target="_blank">
+                    <li><a href="${shop.zaloLink}" target="_blank">
                         <img style="width: 30px" src="/assets/img/zalo.png" alt="/assets/img/zalo.png">
                     </a></li>
                 </ul>

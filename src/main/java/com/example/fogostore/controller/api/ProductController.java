@@ -2,6 +2,7 @@ package com.example.fogostore.controller.api;
 
 import com.example.fogostore.dto.product.ProductDto;
 
+import com.example.fogostore.form.SearchProductForm;
 import com.example.fogostore.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -76,23 +77,13 @@ public class ProductController {
     }
 
     @GetMapping("admin-search")
-    public ResponseEntity getProductsListByAdmin(
-            @RequestParam String searchKeyword,
-            @RequestParam int page,
-            @RequestParam int size,
-            @RequestParam(defaultValue = "0") Integer brandId,
-            @RequestParam(defaultValue = "0") Integer categoryId){
-        return ResponseEntity.ok(productService.searchProducts(searchKeyword, categoryId, brandId, page, size, true));
+    public ResponseEntity getProductsListByAdmin(SearchProductForm searchProductForm){
+        return ResponseEntity.ok(productService.searchProducts(searchProductForm, true));
     }
 
     @GetMapping("enduser/search")
-    public ResponseEntity getProductsListByUser(
-                    @RequestParam String searchKeyword,
-            @RequestParam int page,
-            @RequestParam int size){
-        Integer categoryId = 0;
-        Integer brandId = 0;
-        return ResponseEntity.ok(productService.searchProducts(searchKeyword, categoryId, brandId, page, size, false));
+    public ResponseEntity getProductsListByUser(SearchProductForm searchProductForm){
+        return ResponseEntity.ok(productService.searchProducts(searchProductForm, false));
     }
 
     @GetMapping("/all-basic")

@@ -8,6 +8,7 @@
 <!--  Main Wrap  -->
 <div id="main-wrap">
     <c:import url="../inc/header.jsp"/>
+    <c:import url="../inc/banner.jsp"/>
     <!--  Page Content  -->
     <div id="page-content">
         <jsp:doBody/>

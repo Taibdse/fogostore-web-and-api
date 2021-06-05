@@ -50,14 +50,16 @@
     z-index: 1000;
     position: absolute;
     top: 110%;
-    left: 0;
+    right: 0;
     max-height: 600px;
     overflow-y: auto;
 }
 
 .suggested-products-list .suggested-products-list-item {
-    height: 60px;
+    max-height: 90px;
     padding-top: 5px;
+    padding-bottom: 5px;
+    height: auto;
     border: 1px solid #ccc;
 }
 
@@ -164,6 +166,14 @@ ul.categories-list li a {
 header nav.navbar #logo a.navbar-brand img {
     max-height: 80px;
     width: auto;
+}
+
+.blog-item .short-content {
+    font-size: 0.75em;
+    color: black;
+    margin-top: 10px;
+    display: inline-block;
+    line-height: 17px;
 }
 
 .phonering-alo-phone.phonering-alo-static {
@@ -666,6 +676,10 @@ header nav.navbar #logo a.navbar-brand img {
         height: 110px;
         bottom: 20px;
         left: 20px;
+    }
+
+    .blog-item .title {
+        font-size: 1em !important;
     }
 }
 

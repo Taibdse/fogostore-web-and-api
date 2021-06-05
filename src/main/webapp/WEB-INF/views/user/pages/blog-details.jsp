@@ -3,7 +3,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <layout:wrapper>
-    <layout:page-header title="Chi tiết bài viết" />
+<%--    <layout:page-header title="Chi tiết bài viết" />--%>
     <div id="home-wrap" class="content-section">
         <div class="container" style="padding-top: 30px; padding-bottom: 60px">
             <c:if test="${blog != null}">
@@ -16,7 +16,7 @@
             </c:if>
 
             <c:if test="${blog == null}">
-                <h4 class="text-center">Không tìm thấy bài viết này</h4>
+                <h4 class="text-center">NOT FOUND</h4>
             </c:if>
 
         </div>

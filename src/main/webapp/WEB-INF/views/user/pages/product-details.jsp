@@ -3,7 +3,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <layout:wrapper>
-    <layout:page-header title="Thông tin sản phẩm"/>
+    <style>
+        .product-price {
+            font-weight: bold;
+            color: var(--main-color);
+            font-size: 2em;
+        }
+    </style>
+<%--    <layout:page-header title="Thông tin sản phẩm"/>--%>
     <div id="home-wrap" class="content-section" style="padding-top: 30px;">
         <!-- Product Intro -->
         <c:if test="${product != null}">
@@ -35,8 +42,8 @@
                             <!-- Single Services -->
                             <div id="product-header">
                                 <div class="text small padding-top-null padding-md-bottom">
-                                    <h1>${product.name}</h1>
-                                    <span class="price">
+                                    <h1 class="product-name">${product.name}</h1>
+                                    <span class="product-price">
                                     <layout:money price="${product.price}"/>
                                 </span>
                                     <c:forEach items="${product.productTypes}" var="productType">

@@ -3,11 +3,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <layout:wrapper>
-    <layout:page-header title="Sản phẩm theo danh mục"/>
+    <style>
+        .category-title-header {
+            font-weight: bold;
+            font-size: 2em;
+        }
+    </style>
+<%--    <layout:page-header title="Sản phẩm theo danh mục"/>--%>
     <div id="home-wrap" class="content-section">
         <div class="container-fluid" style="padding-top: 30px; padding-bottom: 60px">
             <c:if test="${category != null}">
-                <h3 class="text-center">${category.name}</h3>
+                <h3 class="text-center category-title-header">${category.name}</h3>
                 <section id="projects" data-isotope="load-simple" class="page padding-top-null padding-onlybottom-lg">
                     <div class="row">
                         <div class="col-md-3">

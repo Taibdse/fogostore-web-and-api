@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderStatus {
+    public final static String ALL = "all";
     public final static String NEW = "new";
     public final static String CONTACTING = "contacting";
     public final static String DELIVERING = "delivering";

@@ -80,6 +80,7 @@ function getSuggestedProducts(keyword) {
 }
 
 function renderSuggestedProducts(products) {
+    removeSuggestedProductList();
     var $ul = $('<ul class="suggested-products-list"></ul>');
     for (var i = 0; i < products.length; i++) {
         var p = products[i];
@@ -94,6 +95,15 @@ function renderSuggestedProducts(products) {
     $('#search-product-input-group').append($ul);
 }
 
+function renderLoadingSuggestedProducts() {
+    var $ul = $('<ul class="suggested-products-list">Loading...</ul>');
+    $('#search-product-input-group').append($ul);
+}
+
+function removeSuggestedProductList(){
+    $('.suggested-products-list').remove();
+}
+
 $(function () {
     $searchProductInput = $('#search-product-input');
 
@@ -103,15 +113,18 @@ $(function () {
         clearTimeout(searchProductTimeout);
         searchProductTimeout = setTimeout(function () {
             //get products list
-            $('.suggested-products-list').remove();
-            if (!isEmpty(e.target.value)) {
+            removeSuggestedProductList();
+            var searchValue = e.target.value;
+            if (!isEmpty(searchValue) && searchValue.trim().length >= 2) {
+                renderLoadingSuggestedProducts();
                 $.ajax({
                     method: 'GET',
-                    url: '/api/products/end-user/suggestions?keyword=' + e.target.value,
+                    url: '/api/products/end-user/suggestions?keyword=' + searchValue,
                     success: function (res) {
                         renderSuggestedProducts(res);
                     },
                     error: function (err) {
+                        removeSuggestedProductList();
                         console.log(err);
                     }
                 })

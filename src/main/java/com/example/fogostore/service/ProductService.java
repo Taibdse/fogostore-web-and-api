@@ -1,6 +1,7 @@
 package com.example.fogostore.service;
 
 import com.example.fogostore.common.constants.ImageConstants;
+import com.example.fogostore.common.constants.PageSize;
 import com.example.fogostore.common.constants.ProductSortBy;
 import com.example.fogostore.common.enumeration.PageType;
 import com.example.fogostore.common.objects.ProductInclusionFieldsBuilder;
@@ -9,6 +10,7 @@ import com.example.fogostore.common.utils.FileUtils;
 import com.example.fogostore.dto.product.BasicProduct;
 import com.example.fogostore.dto.product.ProductDto;
 import com.example.fogostore.builder.ResultBuilder;
+import com.example.fogostore.form.SearchProductForm;
 import com.example.fogostore.model.*;
 import com.example.fogostore.repository.*;
 import org.modelmapper.ModelMapper;
@@ -48,7 +50,7 @@ public interface ProductService {
 
     Page<ProductDto> getDiscountProducts(int page, int size);
 
-    Page<ProductDto> searchProducts(String search, int categoryId, int brandId, int page, int size, Boolean forAdmin);
+    Page<ProductDto> searchProducts(SearchProductForm searchProductForm, Boolean forAdmin);
 
     List<ProductDto> getSuggestedProducts(String keyword);
 
@@ -538,9 +540,33 @@ class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductDto> searchProducts(String searchValue, int categoryId, int brandId, int page, int size, Boolean forAdmin) {
-        Pageable pageable = PageRequest.of(page - 1, size, Sort.by("sortIndex").ascending());
-        Page<Product> productPage = null;
+    public Page<ProductDto> searchProducts(SearchProductForm searchProductForm, Boolean forAdmin) {
+        String searchValue = Optional.ofNullable(searchProductForm.getSearchValue()).orElse("");
+        int categoryId = Optional.ofNullable(searchProductForm.getCategoryId()).orElse(0);
+        int brandId = Optional.ofNullable(searchProductForm.getBrandId()).orElse(0);
+        int page = Optional.ofNullable(searchProductForm.getPage()).orElse(1);
+        int size = Optional.ofNullable(searchProductForm.getSize()).orElse(PageSize.PAGE_SIZE_10);
+
+        String sortBy = searchProductForm.getSortBy();
+
+        Sort sort = Sort.by("sortIndex").ascending();
+        switch (sortBy) {
+            case ProductSortBy.CREATED_AT_ASC:
+                sort = Sort.by("id").ascending();
+                break;
+            case ProductSortBy.CREATED_AT_DESC:
+                sort = Sort.by("id").descending();
+                break;
+            case ProductSortBy.SORT_INDEX_DESC:
+                sort = Sort.by("sortIndex").descending();
+                break;
+            case ProductSortBy.SORT_INDEX_ASC:
+                sort = Sort.by("sortIndex").ascending();
+                break;
+        }
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
+
+        Page<Product> productPage;
         ProductInclusionFieldsBuilder productInclusionFieldsBuilder = ProductInclusionFieldsBuilder.build();
         if (forAdmin) {
             productInclusionFieldsBuilder.setIncludeBrandAndCategoryList(true);

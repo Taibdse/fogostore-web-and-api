@@ -3,17 +3,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <layout:wrapper>
-    <div class="text small padding-topbottom-null">
-        <div class="project-gallery">
-            <c:forEach items="${website.homePageImages}" var="homePageImage">
-                <div class="item">
-                    <img class="img-responsive" src="${homePageImage}" alt="homePageImage">
-                </div>
-            </c:forEach>
-        </div>
-    </div>
-    <div class="clearfix"></div>
-
     <div id="home-wrap" class="content-section" style="margin-top: 70px">
         <div class="container" style="margin-bottom: 50px; margin-top: 70px">
             <section id="projects" data-isotope="load-simple" class="page padding-top-null padding-onlybottom-lg">

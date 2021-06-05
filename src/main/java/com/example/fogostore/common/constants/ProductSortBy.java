@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductSortBy {
-    public static final String DEFAULT = "mac_dinh";
-    public static final String CREATED_AT_ASC = "cu_nhat";
-    public static final String CREATED_AT_DESC = "moi_nhat";
-    public static final String PRICE_ASC = "gia_tang";
-    public static final String PRICE_DESC = "gia_giam";
+    public static final String DEFAULT = "default";
+    public static final String CREATED_AT_ASC = "created_at_asc";
+    public static final String CREATED_AT_DESC = "created_at_desc";
+    public static final String SORT_INDEX_ASC = "sort_index_asc";
+    public static final String SORT_INDEX_DESC = "sort_index_desc";
+    public static final String PRICE_ASC = "price_asc";
+    public static final String PRICE_DESC = "price_desc";
 
     public static List<String> getList(){
         List<String> list = new ArrayList<>();
