@@ -19,7 +19,7 @@ public interface WebsiteService {
 
     WebsiteDto getThelatest();
 
-    WebsiteDto mapModelToDto(Website website);
+    WebsiteDto toDto(Website website);
 }
 
 @Service
@@ -86,7 +86,7 @@ class WebsiteServiceImpl implements WebsiteService {
 
         List<Image> subPagesImages = imageRepository.findByType(ImageConstants.SUBPAGES_BANNER);
         List<Image> homePageImages = imageRepository.findByType(ImageConstants.HOMEPAGE_BANNER);
-        List<Image> customerPartnerImages = imageRepository.findByType(ImageConstants.CUSTOMER_PARTNER);
+//        List<Image> customerPartnerImages = imageRepository.findByType(ImageConstants.CUSTOMER_PARTNER);
         List<Image> logoWebsiteImages = imageRepository.findByType(ImageConstants.LOGO_WEBSITE);
 
 
@@ -96,11 +96,11 @@ class WebsiteServiceImpl implements WebsiteService {
                 deletedImages.add(image);
             }
         });
-        customerPartnerImages.stream().forEach(image -> {
-            if (!websiteDto.getCustomerPartnerImages().contains(image.getUrl())) {
-                deletedImages.add(image);
-            }
-        });
+//        customerPartnerImages.stream().forEach(image -> {
+//            if (!websiteDto.getCustomerPartnerImages().contains(image.getUrl())) {
+//                deletedImages.add(image);
+//            }
+//        });
         if (subPagesImages.size() > 0) {
             if (!subPagesImages.get(0).getUrl().equals(websiteDto.getSubPageImage())) {
                 deletedImages.add(subPagesImages.get(0));
@@ -117,12 +117,13 @@ class WebsiteServiceImpl implements WebsiteService {
 
         int index = 1;
         for (String homePageImage : websiteDto.getHomePageImages()) {
-            Image found = homePageImages.stream().filter(image -> {
-                return image.getUrl().equals(homePageImage);
-            }).findFirst().orElse(null);
+            Image found = homePageImages.stream().filter(image -> image.getUrl().equals(homePageImage)).findFirst().orElse(null);
             if (found == null) {
                 Image newImage = saveImageFile(homePageImage, ImageConstants.HOMEPAGE_BANNER, index++);
                 imageRepository.save(newImage);
+            } else {
+                found.setSortIndex(index++);
+                imageRepository.save(found);
             }
         }
 
@@ -165,11 +166,11 @@ class WebsiteServiceImpl implements WebsiteService {
     @Override
     public WebsiteDto getThelatest() {
         Website website = websiteRepository.findTheLatest();
-        return mapModelToDto(website);
+        return toDto(website);
     }
 
     @Override
-    public WebsiteDto mapModelToDto(Website website) {
+    public WebsiteDto toDto(Website website) {
         if (website == null) return null;
         WebsiteDto websiteDto = modelMapper.map(website, WebsiteDto.class);
         List<Image> homePageImages = imageRepository.findByType(ImageConstants.HOMEPAGE_BANNER);
