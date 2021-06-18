@@ -10,7 +10,7 @@
                 <h3 class="text-center">${policy.name}</h3>
                 <div class="row">
                     <div class="col-md-8 mx-auto float-none">
-                        <div>${policy.content}</div>
+                        <div class="editor-content">${policy.content}</div>
                     </div>
                 </div>
             </div>

@@ -53,24 +53,7 @@
                                                   class="d-inline-block">${productType.name}</span>
                                         </div>
                                     </c:forEach>
-                                    <div style="margin-top: 20px">${product.description}</div>
-                                        <%--                                <div class="add-to-cart">--%>
-                                        <%--                                    <input type="number" step="1" min="" max="" name="quantity" value="1" title="Qtà" class="input-text qty text" size="4">--%>
-                                        <%--                                    <button type="submit" class="btn-alt small border">Add to cart</button>--%>
-                                        <%--                                </div>--%>
-                                        <%--                                <a href="javascript:void(0)" id="btn-share" class="margin-bottom">Share</a>--%>
-                                        <%--                                <div class="share-box">--%>
-                                        <%--                                    <a href="#"><i class="fa fa-facebook"></i></a>--%>
-                                        <%--                                    <a href="#"><i class="fa fa-twitter"></i></a>--%>
-                                        <%--                                    <a href="#"><i class="fa fa-pinterest-p"></i></a>--%>
-                                        <%--                                    <a href="#"><i class="fa fa-envelope"></i></a>--%>
-                                        <%--                                </div>--%>
-                                        <%--                                <span class="product-cats">--%>
-                                        <%--                                               Categories <a href="">New Arrivals</a>, <a href="">Accessories</a>--%>
-                                        <%--                                           </span>--%>
-                                        <%--                                <span class="product-tags">--%>
-                                        <%--                                               Tags <a href="">Wood</a>, <a href="">Notebook</a>--%>
-                                        <%--                                           </span>--%>
+                                    <div style="margin-top: 20px" class="editor-content">${product.description}</div>
                                 </div>
                             </div>
                         </div>
@@ -92,7 +75,7 @@
                                 </li>
                             </ul>
                             <div class="tab-content">
-                                <div role="tabpanel" class="tab-pane active" id="tab-one">
+                                <div role="tabpanel" class="tab-pane active editor-content" id="tab-one">
                                         ${product.techInfo}
                                 </div>
                             </div>

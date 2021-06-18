@@ -10,7 +10,7 @@
                 <div class="row">
                     <h3 class="text-center" style="margin-top: 20px; margin-bottom: 20px">${blog.title}</h3>
                     <div class="col-md-8 mx-auto float-none">
-                        <div>${blog.content}</div>
+                        <div class="editor-content">${blog.content}</div>
                     </div>
                 </div>
             </c:if>

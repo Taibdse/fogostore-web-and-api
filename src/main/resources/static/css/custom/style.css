@@ -628,6 +628,14 @@ header nav.navbar #logo a.navbar-brand img {
     }
 }
 
+.editor-content {
+    padding: 5px;
+}
+
+.editor-content img {
+    max-width: 100% !important;
+}
+
 @media screen and (max-width: 767px) {
     #page-content #projects .projects-items.three-columns .one-item, #page-content #projects .masonry-items.three-columns .one-item, #page-content #projects-filters .projects-items.three-columns .one-item, #page-content #projects-filters .masonry-items.three-columns .one-item, #page-content #masonry-filters .projects-items.three-columns .one-item, #page-content #masonry-filters .masonry-items.three-columns .one-item {
         width: 50%;

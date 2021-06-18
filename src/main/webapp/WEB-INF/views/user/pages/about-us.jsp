@@ -8,7 +8,7 @@
         <div class="container" style="margin-top: 30px; margin-bottom: 30px">
             <div class="row">
                 <div class="col-md-8 mx-auto float-none">
-                    <div>${shop.aboutUsContent}</div>
+                    <div class="editor-content">${shop.aboutUsContent}</div>
                 </div>
             </div>
         </div>
