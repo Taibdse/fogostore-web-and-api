@@ -1,39 +1,22 @@
 var searchProductTimeout;
 var $searchProductInput;
 
-$(function () {
-    addActiveClassToMenu();
-    bindEventsChangeCollapseIcon();
+var UrlUtils = (function () {
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
 
-    $(".product-gallery").owlCarousel({
-        loop: true,
-        autoplay: true,
-        responsive : {
-            0:{
-                items:2,
-            },
-            767 : {
-                items: 3
-            },
-            900 : {
-                items: 4
-            }
-        }
-    });
+    return {
+        getParameterByName: getParameterByName
+    }
+})();
 
-    $(".three-item-gallery").owlCarousel({
-        loop: true,
-        autoplay: true,
-        responsive : {
-            0:{
-                items:2,
-            },
-            767 : {
-                items: 3
-            },
-        }
-    });
-});
 
 function bindEventsChangeCollapseIcon() {
     $('.collapse').on('show.bs.collapse', function (e) {
@@ -79,20 +62,30 @@ function getSuggestedProducts(keyword) {
     });
 }
 
-function renderSuggestedProducts(products) {
+function renderSuggestedProducts(products, searchValue) {
     removeSuggestedProductList();
     var $ul = $('<ul class="suggested-products-list"></ul>');
-    for (var i = 0; i < products.length; i++) {
-        var p = products[i];
-        var $li = $('<li class="suggested-products-list-item">' +
-            '<a href="/san-pham/' + p.slug + '">' +
-            '<img src="' + p.mainImage + '"> <span class="name">' + p.name + '</span> <span class="product-suggested-price">' + toMoneyFormat(p.price) + ' đ</span>' +
+    if (products.length > 0) {
+        for (var i = 0; i < products.length; i++) {
+            var p = products[i];
+            var $li = $('<li class="suggested-products-list-item">' +
+                '<a href="/san-pham/' + p.slug + '">' +
+                '<img src="' + p.mainImage + '"> <span class="name">' + p.name + '</span> <span class="product-suggested-price">' + toMoneyFormat(p.price) + ' đ</span>' +
+                '</a>' +
+                '</li>')
+
+            $ul.append($li);
+        }
+
+        var $showMoreProductListItem = $('<li class="suggested-products-list-item">' +
+            '<a href="/tim-san-pham?searchValue=' + searchValue + '">' +
+            'Xem thêm...' +
             '</a>' +
             '</li>')
+        $ul.append($showMoreProductListItem);
 
-        $ul.append($li);
+        $('#search-product-input-group').append($ul);
     }
-    $('#search-product-input-group').append($ul);
 }
 
 function renderLoadingSuggestedProducts() {
@@ -100,11 +93,17 @@ function renderLoadingSuggestedProducts() {
     $('#search-product-input-group').append($ul);
 }
 
-function removeSuggestedProductList(){
+function removeSuggestedProductList() {
     $('.suggested-products-list').remove();
 }
 
+
 $(function () {
+
+});
+
+$(function () {
+
     $searchProductInput = $('#search-product-input');
 
     $searchProductInput.focus();
@@ -121,7 +120,7 @@ $(function () {
                     method: 'GET',
                     url: '/api/products/end-user/suggestions?keyword=' + searchValue,
                     success: function (res) {
-                        renderSuggestedProducts(res);
+                        renderSuggestedProducts(res, searchValue);
                     },
                     error: function (err) {
                         removeSuggestedProductList();
@@ -131,5 +130,45 @@ $(function () {
             }
         }, 300);
     });
+
+    $searchProductInput.on('keypress', function (e) {
+        var searchValue = e.target.value;
+        if (e.keyCode == 13 || e.which == 13) {
+            location.href = '/tim-san-pham?searchValue=' + searchValue;
+        }
+    });
+
+    $(".product-gallery").owlCarousel({
+        loop: true,
+        autoplay: true,
+        responsive: {
+            0: {
+                items: 2,
+            },
+            767: {
+                items: 3
+            },
+            900: {
+                items: 4
+            }
+        }
+    });
+
+    $(".three-item-gallery").owlCarousel({
+        loop: true,
+        autoplay: true,
+        responsive: {
+            0: {
+                items: 2,
+            },
+            767: {
+                items: 3
+            },
+        }
+    });
+
+    addActiveClassToMenu();
+    bindEventsChangeCollapseIcon();
+
 })
 

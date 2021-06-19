@@ -29,6 +29,7 @@ public class CustomStringUtils {
         String normalized = Normalizer.normalize(nowhitespace, Normalizer.Form.NFD);
         String slug = NONLATIN.matcher(normalized).replaceAll("");
         slug = EDGESDHASHES.matcher(slug).replaceAll("");
+        slug = slug.replaceAll("-{2,}", "-");
         return slug.toLowerCase(Locale.ENGLISH);
     }
 

@@ -26,4 +26,9 @@ public class ProductInclusionFieldsBuilder {
         this.setIncludeRelatedProducts(true);
         return this;
     }
+
+    public ProductInclusionFieldsBuilder includeBrandAndCategoryList(Boolean value) {
+        this.setIncludeBrandAndCategoryList(value);
+        return this;
+    }
 }

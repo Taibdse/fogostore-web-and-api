@@ -3,18 +3,23 @@
 <%@ taglib prefix="layout" tagdir="/WEB-INF/tags" %>
 <%@ attribute name="product" type="com.example.fogostore.dto.product.ProductDto" %>
 
-<div class="single-item shop one-item design branding">
-    <div class="item">
+<div class="single-item shop one-item design branding product-card">
+    <div class="item" style="margin: 0">
         <img src="${product.mainImage}" alt="${product.name}">
-        <div class="content">
-            <div style="margin-bottom: 10px" class="text-center">
-                <h5 class="font-weight-bold" style="font-size: 0.9em">${product.name}</h5>
-                <c:if test="${product.productTypes.size() == 0}">
-                    <div class="text-center" style="font-size: 0.9em; margin-top: 10px"><layout:money price="${product.price}"/></div>
-                </c:if>
-                <br/>
+        <div class="content" style="margin-bottom: 10px">
+            <h5 class="font-weight-bold" style="font-size: 0.9em">${product.name}</h5>
+            <c:if test="${product.productTypes.size() == 0}">
+                <div class="price-block">
+                    <div class="price"><layout:money price="${product.price}"/></div>
+                    <c:if test="${product.oldPrice != null && product.oldPrice > 0}">
+                        <div class="old-price"><layout:money price="${product.oldPrice}"/></div>
+                    </c:if>
+                </div>
+            </c:if>
+            <br/>
+            <div class="product-type-block">
                 <c:forEach items="${product.productTypes}" var="productType">
-                    <div class="text-center d-block" style="font-size: 0.9em">
+                    <div class="item">
                         <layout:money price="${productType.price}"/>
                         <span style="margin-left: 10px" class="d-inline-block">${productType.name}</span>
                     </div>

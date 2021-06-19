@@ -3,8 +3,10 @@ package com.example.fogostore.controller.mvc;
 import com.example.fogostore.common.constants.PageSize;
 import com.example.fogostore.common.constants.ProductSortBy;
 import com.example.fogostore.common.enumeration.PageType;
+import com.example.fogostore.common.utils.tree.Node;
 import com.example.fogostore.dto.CategoryDto;
 import com.example.fogostore.dto.product.ProductDto;
+import com.example.fogostore.form.SearchProductForm;
 import com.example.fogostore.model.Category;
 import com.example.fogostore.service.BrandService;
 import com.example.fogostore.service.CategoryService;
@@ -118,25 +120,19 @@ public class ShopPageController {
         return "user/pages/product-details";
     }
 
-//    @RequestMapping(value = {"/tim-san-pham"})
-//    public String productDetailsAction(Model model,
-//                                       @RequestParam(defaultValue = "") String search,
-//                                       @RequestParam(defaultValue = "1") int page,
-//                                       @RequestParam(defaultValue = "0") Integer categoryId,
-//                                       @RequestParam(defaultValue = "0") Integer brandId){
-//
-//        Page<ProductDto> productPage = productService.searchProducts(search, categoryId, brandId, page, PageSize.PRODUCT_PAGE_SIZE, false);
-//
-//        Map<Integer, Node> categoryTree = categoryService.getActiveTree();
-//        Map<Integer, Node> brandTree = brandService.getActiveTree();
-//
-//        model.addAttribute("brandTree", brandTree);
-//        model.addAttribute("categoryTree", categoryTree);
-//        model.addAttribute("productPage", productPage);
-//
-//        sharedMvcService.addSharedModelAttributes(model, PageType.PRODUCTS);
-//        return "user/pages/search-product";
-//    }
+    @RequestMapping(value = {"/tim-san-pham"})
+    public String productDetailsAction(Model model, SearchProductForm searchProductForm){
+
+        searchProductForm.setBrandId(0);
+        searchProductForm.setCategoryId(0);
+        searchProductForm.setSortBy(null);
+        Page<ProductDto> productPage = productService.searchProducts(searchProductForm, false);
+
+        model.addAttribute("productPage", productPage);
+
+        sharedMvcService.addSharedModelAttributes(model, PageType.PRODUCTS);
+        return "user/pages/search-products";
+    }
 
 //    @RequestMapping(value = {"/khuyen-mai"})
 //    public String productDetailsAction(Model model,

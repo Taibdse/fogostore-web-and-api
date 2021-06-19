@@ -384,7 +384,8 @@ class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductDto> getHotProducts() {
         List<Product> hotProducts = productRepository.findHotProducts();
-        return hotProducts.stream().map(product -> toDto(product, null)).collect(Collectors.toList());
+        ProductInclusionFieldsBuilder builder = ProductInclusionFieldsBuilder.build().includeBrandAndCategoryList(true);
+        return hotProducts.stream().map(product -> toDto(product, builder)).collect(Collectors.toList());
     }
 
     @Override
@@ -546,10 +547,10 @@ class ProductServiceImpl implements ProductService {
         int brandId = Optional.ofNullable(searchProductForm.getBrandId()).orElse(0);
         int page = Optional.ofNullable(searchProductForm.getPage()).orElse(1);
         int size = Optional.ofNullable(searchProductForm.getSize()).orElse(PageSize.PAGE_SIZE_10);
-
-        String sortBy = searchProductForm.getSortBy();
+        String sortBy = Optional.ofNullable(searchProductForm.getSortBy()).orElse(ProductSortBy.CREATED_AT_ASC);
 
         Sort sort = Sort.by("sortIndex").ascending();
+
         switch (sortBy) {
             case ProductSortBy.CREATED_AT_ASC:
                 sort = Sort.by("id").ascending();
@@ -602,7 +603,8 @@ class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDto> getSuggestedProducts(String keyword) {
-        List<Product> products = productRepository.findBySearchValue(keyword);
-        return products.stream().map(p -> toDto(p, null)).collect(Collectors.toList());
+        Pageable pageable = PageRequest.of(0, 8, Sort.by("sortIndex").ascending());
+        Page<Product> productPage = productRepository.findBySearchValue(keyword, pageable);
+        return productPage.getContent().stream().map(p -> toDto(p, null)).collect(Collectors.toList());
     }
 }

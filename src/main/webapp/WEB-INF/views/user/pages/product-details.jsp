@@ -4,15 +4,21 @@
 
 <layout:wrapper>
     <style>
-        .product-price {
+        .price-block > .current-price {
             font-weight: bold;
             color: var(--main-color);
             font-size: 2em;
         }
+
+        .price-block > .old-price {
+            font-size: 1.5em;
+            text-decoration: line-through;
+            font-style: italic;
+            margin-left: 10px;
+        }
     </style>
-<%--    <layout:page-header title="Thông tin sản phẩm"/>--%>
+
     <div id="home-wrap" class="content-section" style="padding-top: 30px;">
-        <!-- Product Intro -->
         <c:if test="${product != null}">
             <div class="container">
                 <div class="row no-margin wrap-text padding-onlytop-lg">
@@ -39,13 +45,15 @@
                     </div>
                     <div class="col-md-6 padding-leftright-null">
                         <div class="row no-margin">
-                            <!-- Single Services -->
                             <div id="product-header">
                                 <div class="text small padding-top-null padding-md-bottom">
                                     <h1 class="product-name">${product.name}</h1>
-                                    <span class="product-price">
-                                    <layout:money price="${product.price}"/>
-                                </span>
+                                    <div class="price-block">
+                                        <span class="current-price"><layout:money price="${product.price}"/></span>
+                                        <c:if test="${product.oldPrice != null && product.oldPrice > 0}">
+                                            <span class="old-price"><layout:money price="${product.oldPrice}"/></span>
+                                        </c:if>
+                                    </div>
                                     <c:forEach items="${product.productTypes}" var="productType">
                                         <div style="font-size: 1.1em">
                                             <layout:money price="${productType.price}"/>
@@ -87,12 +95,12 @@
             <c:if test="${product.relatedProducts.size() > 0}">
                 <div class="container">
                     <div class="row no-margin wrap-text">
-                        <h4>Sản phẩm liên quan</h4>
+                        <h4 style="margin-bottom: 30px">Sản phẩm liên quan</h4>
                         <div class="product-gallery">
                             <c:forEach items="${product.relatedProducts}" var="relatedProduct">
                                 <div class="item">
                                     <a href="/san-pham/${relatedProduct.slug}">
-                                        <layout:product product="${relatedProduct}" />
+                                        <layout:product product="${relatedProduct}"/>
                                     </a>
                                 </div>
                             </c:forEach>
@@ -108,6 +116,5 @@
         <c:if test="${product == null}">
             <h3 class="text-center" style="margin-bottom: 20px">Không tìm thấy sản phẩm này</h3>
         </c:if>
-
     </div>
 </layout:wrapper>

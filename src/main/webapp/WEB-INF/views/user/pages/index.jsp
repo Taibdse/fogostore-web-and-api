@@ -3,6 +3,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <layout:wrapper>
+    <style>
+        .hot-products .category-title {
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            padding-bottom: 10px
+        }
+
+        .section-title {
+
+        }
+    </style>
     <div id="home-wrap" class="content-section" style="margin-top: 70px">
         <div class="container" style="margin-bottom: 50px; margin-top: 70px">
             <section id="projects" data-isotope="load-simple" class="page padding-top-null padding-onlybottom-lg">
@@ -11,7 +23,8 @@
                         <a href="/danh-muc/${categoryMapItem.value.value.slug}">
                             <div class="single-item shop one-item design branding">
                                 <div class="item">
-                                    <img src="${categoryMapItem.value.value.image}" alt="${categoryMapItem.value.value.name}">
+                                    <img src="${categoryMapItem.value.value.image}"
+                                         alt="${categoryMapItem.value.value.name}">
                                     <div class="content">
                                         <div style="margin-bottom: 10px" class="text-center">
                                             <h5 class="font-weight-bold"
@@ -29,14 +42,23 @@
             <hr style="border: 2px solid #ccc"/>
         </div>
 
-        <h3 class="text-center">Sản phẩm nổi bật</h3>
+        <h2 class="text-center font-weight-bold">Sản phẩm nổi bật</h2>
         <div class="container">
-            <section id="projects" data-isotope="load-simple" class="page padding-top-null padding-onlybottom-lg">
-                <div class="projects-items equal four-columns">
-                    <c:forEach items="${hotProducts}" var="hotProduct">
-                        <layout:product product="${hotProduct}"/>
-                    </c:forEach>
-                </div>
+            <section id="projects" data-isotope="load-simple" class="page padding-top-null padding-onlybottom-lg hot-products">
+                <c:forEach items="${hotPorductsMap}" var="entry">
+                    <c:if test="${entry.value.size() > 0}">
+                        <h4 class="category-title">${entry.key}</h4>
+                        <div class="product-gallery" style="margin-bottom: 30px">
+                            <c:forEach items="${entry.value}" var="product">
+                                <div class="item">
+                                    <a href="/san-pham/${product.slug}">
+                                        <layout:product product="${product}"/>
+                                    </a>
+                                </div>
+                            </c:forEach>
+                        </div>
+                    </c:if>
+                </c:forEach>
             </section>
             <c:if test="${hotBlogs.size() > 0}">
                 <hr style="border: 2px solid #ccc"/>
@@ -44,7 +66,7 @@
         </div>
 
         <c:if test="${hotBlogs.size() > 0}">
-            <h3 class="text-center">Bài viết hay</h3>
+            <h2 class="text-center font-weight-bold">Bài viết hay</h2>
             <div class="container">
                 <section id="news" class="page">
                     <div class="three-item-gallery">

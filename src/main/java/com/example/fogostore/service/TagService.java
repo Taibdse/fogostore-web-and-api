@@ -12,14 +12,18 @@ import java.util.List;
 
 public interface TagService {
     Tag getById(Integer id);
+
     ResultBuilder create(Tag tag);
+
     ResultBuilder update(Tag tag);
+
     ResultBuilder delete(Integer id);
+
     List<Tag> getAllActive();
 }
 
 @Service
-class TagServiceImpl implements TagService{
+class TagServiceImpl implements TagService {
 
     @Autowired
     TagRepository tagRepository;
@@ -50,7 +54,7 @@ class TagServiceImpl implements TagService{
     public ResultBuilder update(Tag tag) {
         ResultBuilder resultBuilder = ResultBuilder.build();
         Tag found = getById(tag.getId());
-        if(found == null){
+        if (found == null) {
             return resultBuilder.success(false).errors("NOTFOUND", NOTFOUND);
         } else {
             tag = tagRepository.save(tag);
@@ -62,7 +66,7 @@ class TagServiceImpl implements TagService{
     public ResultBuilder delete(Integer id) {
         ResultBuilder resultBuilder = ResultBuilder.build();
         Tag found = getById(id);
-        if(found == null || !found.isActive()){
+        if (found == null || !found.isActive()) {
             return resultBuilder.success(false).errors("NOTFOUND", NOTFOUND);
         } else {
             found.setActive(false);
