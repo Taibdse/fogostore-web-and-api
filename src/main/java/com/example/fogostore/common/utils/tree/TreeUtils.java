@@ -35,20 +35,17 @@ public class TreeUtils {
         return mapTmp;
     }
 
-    public static List<Integer> getChidrenListIdFromNode(Node node){
+    public static List<Integer> getChidrenListIdFromNode(Node node) {
         List<Integer> ids = new ArrayList<>();
-        if(node.getChildren().size() == 0) {
-            return new ArrayList<>();
-        } else {
-            for (Object child : node.getChildren()) {
-                List<Integer> idList = getChidrenListIdFromNode((Node) child);
-                ids.addAll(idList);
-            }
+        for (Object child : node.getChildren()) {
+            List<Integer> idList = getChidrenListIdFromNode((Node) child);
+            ids.addAll(idList);
+            ids.add(((Node<?>) child).getId());
         }
         return ids;
     }
 
-    public static Map<Integer, Node> convertCategoryListToTree(List<Category> categories){
+    public static Map<Integer, Node> convertCategoryListToTree(List<Category> categories) {
         List<Node> nodes = categories.stream().map(cate -> {
             Node node = new Node();
             node.setId(cate.getId());
@@ -59,7 +56,7 @@ public class TreeUtils {
         return createTree(nodes);
     }
 
-    public static Map<Integer, Node> convertBrandListToTree(List<Brand> brands){
+    public static Map<Integer, Node> convertBrandListToTree(List<Brand> brands) {
         List<Node> nodes = brands.stream().map(brand -> {
             Node node = new Node();
             node.setId(brand.getId());
