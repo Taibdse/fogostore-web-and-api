@@ -2,6 +2,7 @@ package com.example.fogostore.controller.mvc;
 
 import com.example.fogostore.common.enumeration.PageType;
 import com.example.fogostore.common.utils.tree.Node;
+import com.example.fogostore.common.utils.tree.TreeUtils;
 import com.example.fogostore.dto.BlogDto;
 import com.example.fogostore.dto.product.ProductDto;
 import com.example.fogostore.model.Category;
@@ -49,7 +50,12 @@ public class HomePageController {
 
         for (Map.Entry<Integer, Node> entry : categoryMap.entrySet()) {
             Category category = (Category) entry.getValue().getValue();
-            List<ProductDto> products = hotPorducts.stream().filter(p -> p.getCategoryIds().contains(category.getId())).collect(Collectors.toList());
+            List<Integer> categoryIds = TreeUtils.getChidrenListIdFromNode(entry.getValue());
+            categoryIds.add(category.getId());
+
+            List<ProductDto> products = hotPorducts.stream().filter(p -> {
+                return p.getCategoryIds().stream().filter(id -> categoryIds.contains(id)).count() > 0;
+            }).collect(Collectors.toList());
             hotPorductsMap.put(category.getName(), products);
         }
 
