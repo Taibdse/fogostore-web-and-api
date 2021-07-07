@@ -58,6 +58,14 @@
           location.href = '/tim-san-pham?searchValue=' + searchValue;
       });
 
+      $('nav ul.pagination li.page-item').on('click', function (e) {
+          e.preventDefault();
+          var page = $(this).data('page');
+          var searchValue = $searchInput.val();
+          var href = location.pathname + '?page=' + page + '&searchValue=' + searchValue;
+          location.href = href;
+      });
+
       $('html, body').animate({
           scrollTop: $("#search-result").offset().top
       }, 0);
