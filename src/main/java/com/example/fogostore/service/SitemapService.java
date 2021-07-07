@@ -29,7 +29,7 @@ class SitemapServiceImpl implements SitemapService{
     @Value("${sitemap_location}")
     private String sitemapLocation;
 
-    @Value("${domain_name}")
+    @Value("${web_domain}")
     private String domainName;
 
     @Autowired

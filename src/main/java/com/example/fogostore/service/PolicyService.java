@@ -33,8 +33,8 @@ class PolicyServiceImpl implements PolicyService {
     @Autowired
     PolicyRepository policyRepository;
 
-//    @Autowired
-//    EntityManager entityManager;
+    @Autowired
+    SharedService sharedService;
 
     private final String NOT_FOUND = "không tìm thấy chính sách này!";
 
@@ -47,6 +47,7 @@ class PolicyServiceImpl implements PolicyService {
         }
         policy.setSlug(slug);
         policy.setActive(true);
+        policy.setContent(sharedService.formatEditorContent(policy.getContent()));
         policy = policyRepository.save(policy);
 
         return ResultBuilder.build().data(policy).success(true);
@@ -68,8 +69,8 @@ class PolicyServiceImpl implements PolicyService {
             slug += "-" + new Date().getTime();
         }
         policy.setSlug(slug);
+        policy.setContent(sharedService.formatEditorContent(policy.getContent()));
         policy = policyRepository.save(policy);
-
 
         return result.data(policy).success(true);
     }

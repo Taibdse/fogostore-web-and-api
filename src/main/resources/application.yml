@@ -15,7 +15,7 @@ server:
     enabled: false
 image_folder_path: C:\Users\Admin\Desktop\project\fogostore\images
 sitemap_location: C:\Users\Admin\Desktop\project\fogostore\sitemap
-domain_name: http://localhost:5004
+web_domain: http://localhost:5004
 ---
 
 spring:
@@ -35,4 +35,4 @@ server:
     enabled: true
 image_folder_path: /deployments/fogostore/images
 sitemap_location: /deployments/fogostore/sitemap
-domain_name: https://fogostore.vn
+web_domain: https://fogostore.vn

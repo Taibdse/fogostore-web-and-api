@@ -99,6 +99,9 @@ class ProductServiceImpl implements ProductService {
     @Autowired
     PageMetadataRepository pageMetadataRepository;
 
+    @Autowired
+    SharedService sharedService;
+
     private final String PRODUCT_NOTFOUND = "không tìm thấy sản phẩm này!";
     private final String CATEGORY_TYPE = "CATEGORY_TYPE";
     private final String BRAND_TYPE = "BRAND_TYPE";
@@ -142,6 +145,8 @@ class ProductServiceImpl implements ProductService {
         }
         product.setSlug(slug);
         product.setActive(true);
+        product.setDescription(sharedService.formatEditorContent(product.getDescription()));
+        product.setTechInfo(sharedService.formatEditorContent(product.getTechInfo()));
 
         product = productRepository.save(product);
 
@@ -188,6 +193,7 @@ class ProductServiceImpl implements ProductService {
 
         //save page meta data
         PageMetadata pageMetadata = productDto.getPageMetadata();
+        if (pageMetadata == null) pageMetadata = new PageMetadata();
         pageMetadata.setProductId(product.getId());
         pageMetadata.setPageType(PageType.PRODUCT_DETAIL);
         pageMetadataRepository.save(pageMetadata);
@@ -235,6 +241,9 @@ class ProductServiceImpl implements ProductService {
             slug = slug + "-" + new Date().getTime();
         }
         product.setSlug(slug);
+        product.setDescription(sharedService.formatEditorContent(product.getDescription()));
+        product.setTechInfo(sharedService.formatEditorContent(product.getTechInfo()));
+
         product = productRepository.save(product);
 
         productBrandCategoryRepository.deleteByProductId(productDto.getId());

@@ -38,6 +38,9 @@ class ShopServiceImpl implements ShopService {
     @Autowired
     FileUtils fileUtils;
 
+    @Autowired
+    SharedService sharedService;
+
     private final String NOTFOUND = "Không tìm thấy thông tin cửa hàng!";
 
     @Override
@@ -90,11 +93,13 @@ class ShopServiceImpl implements ShopService {
             updatedShop.setLogo(value.get("fileName"));
             fileUtils.removeFile(oldLogo);
         }
+        updatedShop.setAboutUsContent(sharedService.formatEditorContent(updatedShop.getAboutUsContent()));
 
         updatedShop = shopRepository.save(updatedShop);
 
         //save page meta data
         PageMetadata pageMetadata = shopDto.getPageMetadata();
+        if(pageMetadata == null) pageMetadata = new PageMetadata();
         List<PageMetadata> currentPageMetadataList = pageMetadataRepository.findByPageType(PageType.ABOUT_US);
         if(currentPageMetadataList.size() > 0){
             pageMetadata.setId(currentPageMetadataList.get(0).getId());

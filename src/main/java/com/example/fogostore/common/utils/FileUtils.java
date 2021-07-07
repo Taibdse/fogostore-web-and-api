@@ -27,6 +27,18 @@ public class FileUtils {
     @Value("${image_folder_path}")
     private String imageFolderPath;
 
+    public byte[] findImageFile(String fileName) {
+        byte[] content = new byte[]{};
+        String location = getImageFolderPath();
+        File f = new File(location + File.separator + fileName);
+        try {
+            content = Files.readAllBytes(f.toPath());
+        } catch (IOException e) {
+
+        }
+        return content;
+    }
+
     public HashMap<String, String> checkImage(String base64, boolean allowImageEmpty) {
         HashMap<String, String> errors = new HashMap<>();
 
@@ -67,8 +79,8 @@ public class FileUtils {
     }
 
     public boolean isImage(String base64) {
-        if(StringUtils.isEmpty(base64)) return false;
-        if(base64.indexOf("data:image/") > -1) return true;
+        if (StringUtils.isEmpty(base64)) return false;
+        if (base64.indexOf("data:image/") > -1) return true;
         return false;
     }
 

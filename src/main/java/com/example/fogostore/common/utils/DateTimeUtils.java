@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DateTimeUtils {
-    public static String getLocalTime(Date time){
+    public static String getLocalTime(Date time) {
         try {
             return new SimpleDateFormat("dd/MM/yyyy HH:mm").format(time);
         } catch (Exception e) {

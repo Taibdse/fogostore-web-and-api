@@ -31,19 +31,28 @@ import java.util.stream.Collectors;
 
 public interface BlogService {
     BlogDto getById(Integer id);
+
     BlogDto getBySlug(String slug);
+
     BlogDto toDto(Blog blog, Boolean includeDetails);
+
     ResultBuilder create(BlogDto blog);
+
     ResultBuilder update(BlogDto blog);
+
     ResultBuilder delete(Integer id);
+
     ResultBuilder deleteByIds(List<Integer> ids);
+
     Page<Blog> search(String blog, int page, int size);
+
     ResultBuilder saveSortIndexes(List<BlogDto> blogs);
+
     List<BlogDto> getHotBlogs();
 }
 
 @Service
-class BlogServiceImpl implements BlogService{
+class BlogServiceImpl implements BlogService {
 
 
     @Autowired
@@ -58,6 +67,9 @@ class BlogServiceImpl implements BlogService{
     @Autowired
     PageMetadataRepository pageMetadataRepository;
 
+    @Autowired
+    SharedService sharedService;
+
     private final String NOTFOUND = "Không tìm thấy bài viết này";
 
     @Override
@@ -71,7 +83,7 @@ class BlogServiceImpl implements BlogService{
         for (BlogDto blogDto : blogs) {
             blogRepository.updateSortIndexById(blogDto.getId(), blogDto.getSortIndex());
         }
-        return  ResultBuilder.build().success(true).data(blogs);
+        return ResultBuilder.build().success(true).data(blogs);
     }
 
     @Override
@@ -82,9 +94,9 @@ class BlogServiceImpl implements BlogService{
 
     @Override
     public BlogDto toDto(Blog blog, Boolean includeDetails) {
-        if(blog == null) return null;
+        if (blog == null) return null;
         BlogDto blogDto = modelMapper.map(blog, BlogDto.class);
-        if(includeDetails) {
+        if (includeDetails) {
             blogDto.setPageMetadata(pageMetadataRepository.findByBlogId(blog.getId()));
         }
         return blogDto;
@@ -92,39 +104,39 @@ class BlogServiceImpl implements BlogService{
 
     @Override
     public BlogDto getById(Integer id) {
-        try{
+        try {
             Blog blog = blogRepository.findById(id).orElse(null);
-            if(blog == null || !blog.isActive()) return null;
+            if (blog == null || !blog.isActive()) return null;
             return toDto(blog, true);
-        } catch (Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
 
     @Override
     public BlogDto getBySlug(String slug) {
-        try{
+        try {
             Blog blog = blogRepository.findBySlug(slug);
-            if(blog == null || !blog.isActive()) return null;
+            if (blog == null || !blog.isActive()) return null;
             return toDto(blog, true);
-        } catch (Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
 
-    public HashMap<String, String> validate(BlogDto blog, boolean editMode){
+    public HashMap<String, String> validate(BlogDto blog, boolean editMode) {
         HashMap<String, String> errors = new HashMap<>();
 
-        if(editMode){
+        if (editMode) {
             BlogDto found = getById(blog.getId());
-            if(found == null){
+            if (found == null) {
                 errors.put("NOTFOUND", NOTFOUND);
                 return errors;
             }
         }
 
-        HashMap<String, String> imageErrors =  fileUtils.checkImage(blog.getImage(), editMode);
-        if(imageErrors.size() > 0) return imageErrors;
+        HashMap<String, String> imageErrors = fileUtils.checkImage(blog.getImage(), editMode);
+        if (imageErrors.size() > 0) return imageErrors;
 
         return errors;
     }
@@ -134,17 +146,18 @@ class BlogServiceImpl implements BlogService{
 
         ResultBuilder result = ResultBuilder.build();
         HashMap<String, String> errors = validate(blog, false);
-        if(errors.size() > 0) return result.success(false).errors(errors);
+        if (errors.size() > 0) return result.success(false).errors(errors);
 
         Blog savedBlog = modelMapper.map(blog, Blog.class);
         String slug = CustomStringUtils.genSlug(blog.getTitle());
         Blog found = blogRepository.findBySlug(slug);
-        if(found != null){
+        if (found != null) {
             slug = slug + '-' + new Date().getTime();
         }
         savedBlog.setSlug(slug);
         savedBlog.setActive(true);
         savedBlog.setType(BlogType.NEWS);
+        savedBlog.setContent(sharedService.formatEditorContent(savedBlog.getContent()));
 
         HashMap<String, String> value = fileUtils.saveImage(blog.getImage(), slug);
         savedBlog.setImage(value.get("fileName"));
@@ -153,6 +166,7 @@ class BlogServiceImpl implements BlogService{
 
         //save page metadata
         PageMetadata pageMetadata = blog.getPageMetadata();
+        if (pageMetadata == null) pageMetadata = new PageMetadata();
         pageMetadata.setPageType(PageType.BLOG_DETAIL);
         pageMetadata.setBlogId(savedBlog.getId());
         pageMetadataRepository.save(pageMetadata);
@@ -164,20 +178,21 @@ class BlogServiceImpl implements BlogService{
     public ResultBuilder update(BlogDto blog) {
         ResultBuilder result = ResultBuilder.build();
         HashMap<String, String> errors = validate(blog, true);
-        if(errors.size() > 0) return result.success(false).errors(errors);
+        if (errors.size() > 0) return result.success(false).errors(errors);
 
         Blog savedBlog = modelMapper.map(blog, Blog.class);
         Blog foundById = blogRepository.findById(blog.getId()).orElse(null);
         String slug = CustomStringUtils.genSlug(blog.getTitle());
         Blog found = blogRepository.findBySlug(slug);
-        if(found != null && found.getId() != blog.getId()){
+        if (found != null && found.getId() != blog.getId()) {
             slug = slug + '-' + new Date().getTime();
         }
         savedBlog.setSlug(slug);
+        savedBlog.setContent(sharedService.formatEditorContent(savedBlog.getContent()));
 
         String newImage = blog.getImage();
         String oldImage = foundById.getImage();
-        if(fileUtils.isImageUrl(newImage) || StringUtils.isEmpty(newImage)){
+        if (fileUtils.isImageUrl(newImage) || StringUtils.isEmpty(newImage)) {
             savedBlog.setImage(oldImage);
         } else {
             HashMap<String, String> value = fileUtils.saveImage(newImage, slug);
@@ -190,7 +205,7 @@ class BlogServiceImpl implements BlogService{
         //save page metadata
         PageMetadata pageMetadata = blog.getPageMetadata();
         PageMetadata currentPageMetadata = pageMetadataRepository.findByBlogId(blog.getId());
-        if(currentPageMetadata != null){
+        if (currentPageMetadata != null) {
             pageMetadata.setId(currentPageMetadata.getId());
         }
         pageMetadata.setPageType(PageType.BLOG_DETAIL);
@@ -204,7 +219,7 @@ class BlogServiceImpl implements BlogService{
     public ResultBuilder delete(Integer id) {
         ResultBuilder result = ResultBuilder.build();
         Blog blog = blogRepository.findById(id).orElse(null);
-        if(blog == null || !blog.isActive()) {
+        if (blog == null || !blog.isActive()) {
             return result.success(false).errors("NOTFOUND", NOTFOUND);
         } else {
             blog.setActive(false);
@@ -215,7 +230,7 @@ class BlogServiceImpl implements BlogService{
 
     @Override
     public Page<Blog> search(String blog, int page, int size) {
-        if(StringUtils.isEmpty(blog)) blog = "";
+        if (StringUtils.isEmpty(blog)) blog = "";
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by("sortIndex").ascending());
         return blogRepository.findByAdmin(blog, pageable);
     }
