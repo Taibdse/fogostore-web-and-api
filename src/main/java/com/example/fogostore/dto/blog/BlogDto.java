@@ -1,4 +1,4 @@
-package com.example.fogostore.dto;
+package com.example.fogostore.dto.blog;
 
 import com.example.fogostore.model.PageMetadata;
 import lombok.AllArgsConstructor;

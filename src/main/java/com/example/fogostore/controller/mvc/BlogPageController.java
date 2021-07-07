@@ -2,7 +2,8 @@ package com.example.fogostore.controller.mvc;
 
 import com.example.fogostore.common.constants.PageSize;
 import com.example.fogostore.common.enumeration.PageType;
-import com.example.fogostore.dto.BlogDto;
+import com.example.fogostore.dto.blog.BasicBlog;
+import com.example.fogostore.dto.blog.BlogDto;
 import com.example.fogostore.model.Blog;
 import com.example.fogostore.service.BlogService;
 import com.example.fogostore.service.SharedMvcService;
@@ -28,7 +29,7 @@ public class BlogPageController {
                                  @RequestParam(defaultValue = PageSize.DEFAULT_PAGE_SIZE + "") int size,
                                  @RequestParam(defaultValue = "1") int page) {
         sharedMvcService.addSharedModelAttributes(model, PageType.BLOGS);
-        Page<Blog> blogPage = blogService.search("", page, size);
+        Page<BasicBlog> blogPage = blogService.search("", page, size);
         model.addAttribute("blogPage", blogPage);
         return "user/pages/blogs";
     }

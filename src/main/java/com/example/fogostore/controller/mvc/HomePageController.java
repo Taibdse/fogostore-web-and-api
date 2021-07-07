@@ -3,7 +3,7 @@ package com.example.fogostore.controller.mvc;
 import com.example.fogostore.common.enumeration.PageType;
 import com.example.fogostore.common.utils.tree.Node;
 import com.example.fogostore.common.utils.tree.TreeUtils;
-import com.example.fogostore.dto.BlogDto;
+import com.example.fogostore.dto.blog.BlogDto;
 import com.example.fogostore.dto.product.ProductDto;
 import com.example.fogostore.model.Category;
 import com.example.fogostore.service.*;

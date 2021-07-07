@@ -1,7 +1,8 @@
 package com.example.fogostore.controller.api;
 
 import com.example.fogostore.builder.ResultBuilder;
-import com.example.fogostore.dto.BlogDto;
+import com.example.fogostore.dto.blog.BasicBlog;
+import com.example.fogostore.dto.blog.BlogDto;
 import com.example.fogostore.model.Blog;
 import com.example.fogostore.service.BlogService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +49,7 @@ public class BlogController {
 
     @GetMapping("admin-search")
     public ResponseEntity searchByAdmin(@RequestParam String blog, @RequestParam int page, @RequestParam int size){
-        Page<Blog> blogPage = blogService.search(blog, page, size);
+        Page<BasicBlog> blogPage = blogService.search(blog, page, size);
         return ResponseEntity.ok(blogPage);
     }
 

@@ -6,10 +6,9 @@ import com.example.fogostore.common.enumeration.PageType;
 import com.example.fogostore.common.utils.CustomStringUtils;
 import com.example.fogostore.common.utils.FileUtils;
 import com.example.fogostore.builder.ResultBuilder;
-import com.example.fogostore.dto.BlogDto;
-import com.example.fogostore.dto.BrandDto;
+import com.example.fogostore.dto.blog.BasicBlog;
+import com.example.fogostore.dto.blog.BlogDto;
 import com.example.fogostore.model.Blog;
-import com.example.fogostore.model.Brand;
 import com.example.fogostore.model.PageMetadata;
 import com.example.fogostore.repository.BlogRepository;
 import com.example.fogostore.repository.PageMetadataRepository;
@@ -25,7 +24,6 @@ import org.springframework.util.StringUtils;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -44,7 +42,7 @@ public interface BlogService {
 
     ResultBuilder deleteByIds(List<Integer> ids);
 
-    Page<Blog> search(String blog, int page, int size);
+    Page<BasicBlog> search(String blog, int page, int size);
 
     ResultBuilder saveSortIndexes(List<BlogDto> blogs);
 
@@ -229,7 +227,7 @@ class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public Page<Blog> search(String blog, int page, int size) {
+    public Page<BasicBlog> search(String blog, int page, int size) {
         if (StringUtils.isEmpty(blog)) blog = "";
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by("sortIndex").ascending());
         return blogRepository.findByAdmin(blog, pageable);
