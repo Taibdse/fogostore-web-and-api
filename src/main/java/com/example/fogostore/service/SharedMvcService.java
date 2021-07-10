@@ -6,6 +6,7 @@ import com.example.fogostore.dto.*;
 import com.example.fogostore.dto.blog.BlogDto;
 import com.example.fogostore.dto.policy.BasicPolicy;
 import com.example.fogostore.dto.product.ProductDto;
+import com.example.fogostore.dto.socialPlugin.SocialPluginDto;
 import com.example.fogostore.model.*;
 import com.example.fogostore.repository.CategoryRepository;
 import com.example.fogostore.repository.PageMetadataRepository;
@@ -50,6 +51,9 @@ class SharedMvcServiceImpl implements SharedMvcService {
     ViewService viewService;
 
     @Autowired
+    SocialPluginService socialPluginService;
+
+    @Autowired
     ModelMapper modelMapper;
 
 
@@ -61,6 +65,8 @@ class SharedMvcServiceImpl implements SharedMvcService {
 
 //        Map<Integer, Node> brandMap = brandService.getActiveTree();
         Map<Integer, Node> categoryMap = categoryService.getActiveTree();
+
+        List<SocialPluginDto> socialPlugins = socialPluginService.getShow();
 
         PageMetadataDto pageMetadata = new PageMetadataDto();
 
@@ -112,6 +118,7 @@ class SharedMvcServiceImpl implements SharedMvcService {
 //        model.addAttribute("brandMap", brandMap);
         model.addAttribute("categoryMap", categoryMap);
         model.addAttribute("policies", policies);
+        model.addAttribute("socialPlugins", socialPlugins);
 //        viewService.create();
     }
 }

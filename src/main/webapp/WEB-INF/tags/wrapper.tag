@@ -17,7 +17,6 @@
     <!--  END Page Content -->
 </div>
 <c:import url="../inc/footer.jsp"/>
-<c:import url="../inc/messenger.jsp"/>
 <c:import url="../inc/scripts.jsp"/>
 </body>
 </html>
