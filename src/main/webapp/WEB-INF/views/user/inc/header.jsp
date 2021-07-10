@@ -1,9 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="layout" tagdir="/WEB-INF/tags" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" trimDirectiveWhitespaces="true" %>
-<style>
 
-</style>
 <header id="header" class="border">
     <div class="container">
         <nav class="navbar navbar-default">
