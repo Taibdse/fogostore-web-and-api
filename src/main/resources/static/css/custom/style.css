@@ -110,6 +110,22 @@
     background-color: rgba(0, 0, 0, 0.04);
 }
 
+footer h5 {
+    margin-bottom: 20px !important;
+}
+
+footer a {
+    color: black;
+}
+
+footer ul.list-group li {
+    margin-bottom: 10px !important;
+}
+
+footer ul.social {
+    float: none;
+}
+
 .mx-auto {
     margin: auto !important;
 }

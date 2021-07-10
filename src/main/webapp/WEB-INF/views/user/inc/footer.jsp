@@ -1,22 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" trimDirectiveWhitespaces="true" %>
-<style>
-    footer h5 {
-        margin-bottom: 20px !important;
-    }
 
-    footer a {
-        color: black;
-    }
-
-    footer ul.list-group li {
-        margin-bottom: 10px !important;
-    }
-
-    footer ul.social {
-        float: none;
-    }
-</style>
 <footer>
     <div class="container">
         <div class="row no-margin">
