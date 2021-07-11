@@ -15,4 +15,8 @@ public interface PolicyRepository extends JpaRepository<Policy, Integer> {
     List<BasicPolicy> findAllActive();
 
     Policy findBySlugEquals(String slug);
+
+    @Query(value = "select count(id) from policy where active = true", nativeQuery = true)
+    Integer countAllActive();
+
 }

@@ -29,4 +29,7 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
     @Transactional
     @Query(value = "update category set active = false where id in ?1", nativeQuery = true)
     void inactiveByIds(List<Integer> ids);
+
+    @Query(value = "select count(id) from category where active = true", nativeQuery = true)
+    Integer countAllActive();
 }

@@ -1,6 +1,6 @@
 package com.example.fogostore.controller.api;
 
-import com.example.fogostore.service.ViewService;
+import com.example.fogostore.service.StatisticService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,10 +11,15 @@ import org.springframework.web.bind.annotation.*;
 public class StatisticController {
 
     @Autowired
-    ViewService viewService;
+    StatisticService statisticService;
 
-    @GetMapping("/views")
-    public ResponseEntity getViewsPerDateInMonth(@RequestParam String time){
-        return ResponseEntity.ok(viewService.getViewsPerDayInMonth(time));
+    @GetMapping("/product")
+    public ResponseEntity getProductStatistics() {
+        return ResponseEntity.ok(statisticService.getProductStatistics());
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity getAllStatistics() {
+        return ResponseEntity.ok(statisticService.getStatistics());
     }
 }

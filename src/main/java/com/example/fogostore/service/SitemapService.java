@@ -2,6 +2,7 @@ package com.example.fogostore.service;
 
 import com.example.fogostore.common.constants.PageSize;
 import com.example.fogostore.common.constants.ProductSortBy;
+import com.example.fogostore.common.constants.RoutePaths;
 import com.example.fogostore.dto.policy.BasicPolicy;
 import com.example.fogostore.model.*;
 import com.example.fogostore.repository.*;
@@ -24,13 +25,13 @@ public interface SitemapService {
 }
 
 @Service
-class SitemapServiceImpl implements SitemapService{
+class SitemapServiceImpl implements SitemapService {
 
     @Value("${sitemap_location}")
     private String sitemapLocation;
 
     @Value("${web_domain}")
-    private String domainName;
+    private String WEB_DOMAIN;
 
     @Autowired
     CategoryRepository categoryRepository;
@@ -47,7 +48,7 @@ class SitemapServiceImpl implements SitemapService{
     @Autowired
     PolicyRepository policyRepository;
 
-    private WebSitemapUrl createSitemapUrl(String url, Date lastMod){
+    private WebSitemapUrl createSitemapUrl(String url, Date lastMod) {
         try {
             return new WebSitemapUrl.Options(url)
                     .lastMod(lastMod).priority(1.0).changeFreq(ChangeFreq.WEEKLY).build();
@@ -57,6 +58,10 @@ class SitemapServiceImpl implements SitemapService{
         return null;
     }
 
+    private String getFullUrl(String path) {
+        return WEB_DOMAIN + path;
+    }
+
     @Override
     public void genSitemap() {
         WebSitemapGenerator wsg = null;
@@ -64,29 +69,29 @@ class SitemapServiceImpl implements SitemapService{
         dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
         List<String> productSortByList = ProductSortBy.getList();
         try {
-            wsg = WebSitemapGenerator.builder(domainName, new File(sitemapLocation)).dateFormat(dateFormat).build();
-            wsg.addUrl(createSitemapUrl(domainName, new Date()));
-            wsg.addUrl(createSitemapUrl(domainName + "/trang-chu", new Date()));
-            wsg.addUrl(createSitemapUrl(domainName + "/ve-chung-toi", new Date()));
+            wsg = WebSitemapGenerator.builder(WEB_DOMAIN, new File(sitemapLocation)).dateFormat(dateFormat).build();
+            wsg.addUrl(createSitemapUrl(WEB_DOMAIN, new Date()));
+            wsg.addUrl(createSitemapUrl(getFullUrl(RoutePaths.HOME_PAGE), new Date()));
+            wsg.addUrl(createSitemapUrl(getFullUrl(RoutePaths.ABOUT_US_PAGE), new Date()));
 
             List<Product> products = productRepository.findAllActiveWithoutPagination();
 
             for (Product product : products) {
-                String url = domainName + "/san-pham/" + product.getSlug();
+                String url = getFullUrl(RoutePaths.PRODUCT_PAGE + "/" + product.getSlug());
                 wsg.addUrl(createSitemapUrl(url, new Date()));
             }
 
-            Integer countDiscountProduct = productRepository.countDiscount();
-            for(int i = 1; i <= Math.ceil((double) countDiscountProduct / PageSize.PRODUCT_PAGE_SIZE); i++){
-                String url = domainName + "/khuyen-mai?" + "?page=" + i;
-                wsg.addUrl(createSitemapUrl(url, new Date()));
-            }
+//            Integer countDiscountProduct = productRepository.countDiscount();
+//            for(int i = 1; i <= Math.ceil((double) countDiscountProduct / PageSize.PRODUCT_PAGE_SIZE); i++){
+//                String url = domainName + "/khuyen-mai?" + "?page=" + i;
+//                wsg.addUrl(createSitemapUrl(url, new Date()));
+//            }
 
             List<Category> categories = categoryRepository.findAllActive();
             for (Category category : categories) {
                 Integer countProducts = productRepository.countByCategoryId(category.getId());
-                for(int i = 1; i <= Math.ceil((double) countProducts / PageSize.PRODUCT_PAGE_SIZE); i++){
-                    String url = domainName + "/danh-muc/" + category.getSlug() + "?page=" + i;
+                for (int i = 1; i <= Math.ceil((double) countProducts / PageSize.PRODUCT_PAGE_SIZE); i++) {
+                    String url = getFullUrl(RoutePaths.PRODUCT_CATEGORY_PAGE + "/" + category.getSlug() + "?page=" + i);
                     for (String productSortBy : productSortByList) {
                         String sortUrl = url + "&sortBy=" + productSortBy;
                         wsg.addUrl(createSitemapUrl(sortUrl, new Date()));
@@ -94,31 +99,31 @@ class SitemapServiceImpl implements SitemapService{
                 }
             }
 
-            List<Brand> brands = brandRepository.findAllActive();
-            for (Brand brand : brands) {
-                Integer countProducts = productRepository.countByCategoryId(brand.getId());
-                for(int i = 1; i <= Math.ceil((double) countProducts / PageSize.PRODUCT_PAGE_SIZE); i++){
-                    String url = domainName + "/hang-xe/" + brand.getSlug() + "?page=" + i;
-                    for (String productSortBy : productSortByList) {
-                        String sortUrl = url + "&sortBy=" + productSortBy;
-                        wsg.addUrl(createSitemapUrl(sortUrl, new Date()));
-                    }
-                }
-            }
+//            List<Brand> brands = brandRepository.findAllActive();
+//            for (Brand brand : brands) {
+//                Integer countProducts = productRepository.countByCategoryId(brand.getId());
+//                for(int i = 1; i <= Math.ceil((double) countProducts / PageSize.PRODUCT_PAGE_SIZE); i++){
+//                    String url = domainName + "/hang-xe/" + brand.getSlug() + "?page=" + i;
+//                    for (String productSortBy : productSortByList) {
+//                        String sortUrl = url + "&sortBy=" + productSortBy;
+//                        wsg.addUrl(createSitemapUrl(sortUrl, new Date()));
+//                    }
+//                }
+//            }
 
             List<Blog> blogs = blogRepository.findAllActive();
             for (Blog blog : blogs) {
-                String url = domainName + "/bai-viet/" + blog.getSlug();
+                String url = getFullUrl(RoutePaths.BLOG_PAGE + "/" + blog.getSlug());
                 wsg.addUrl(createSitemapUrl(url, blog.getUpdatedAt()));
             }
-            for(int i = 1; i <= Math.ceil((double) blogs.size() / PageSize.DEFAULT_PAGE_SIZE); i++){
-                String url = domainName + "/bai-viet?page=" + i;
+            for (int i = 1; i <= Math.ceil((double) blogs.size() / PageSize.DEFAULT_PAGE_SIZE); i++) {
+                String url = getFullUrl(RoutePaths.BLOG_PAGE + "?page=" + i);
                 wsg.addUrl(createSitemapUrl(url, new Date()));
             }
 
             List<BasicPolicy> policies = policyRepository.findAllActive();
             for (BasicPolicy policy : policies) {
-                String url = domainName + "/chinh-sach/" + policy.getSlug();
+                String url = getFullUrl(RoutePaths.POLICY_PAGE + "/" + policy.getSlug());
                 wsg.addUrl(createSitemapUrl(url, new Date()));
             }
         } catch (MalformedURLException e) {
