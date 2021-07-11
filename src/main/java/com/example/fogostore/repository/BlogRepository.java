@@ -36,4 +36,10 @@ public interface BlogRepository extends JpaRepository<Blog, Integer> {
     @Transactional
     @Query(value = "update blog set active = false where id IN ?1", nativeQuery = true)
     void inactivateByIds(List<Integer> ids);
+
+    @Query(value = "select count(id) from blog where active = true", nativeQuery = true)
+    Integer countAllActive();
+
+    @Query(value = "select count(id) from blog where active = true AND hot = true", nativeQuery = true)
+    Integer countAllHot();
 }
