@@ -1,10 +1,10 @@
 package com.example.fogostore.controller.mvc;
 
 import com.example.fogostore.common.constants.PageSize;
+import com.example.fogostore.common.constants.RoutePaths;
 import com.example.fogostore.common.enumeration.PageType;
 import com.example.fogostore.dto.blog.BasicBlog;
 import com.example.fogostore.dto.blog.BlogDto;
-import com.example.fogostore.model.Blog;
 import com.example.fogostore.service.BlogService;
 import com.example.fogostore.service.SharedMvcService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class BlogPageController {
     @Autowired
     BlogService blogService;
 
-    @RequestMapping(value = {"/bai-viet",})
+    @RequestMapping(value = {RoutePaths.BLOG})
     public String blogPageAction(Model model,
                                  @RequestParam(defaultValue = PageSize.DEFAULT_PAGE_SIZE + "") int size,
                                  @RequestParam(defaultValue = "1") int page) {
@@ -34,7 +34,7 @@ public class BlogPageController {
         return "user/pages/blogs";
     }
 
-    @RequestMapping(value = {"/bai-viet/{slug}",})
+    @RequestMapping(value = {RoutePaths.BLOG + "/{slug}",})
     public String blogDetailsPageAction(Model model, @PathVariable String slug) {
         BlogDto blog = blogService.getBySlug(slug);
 

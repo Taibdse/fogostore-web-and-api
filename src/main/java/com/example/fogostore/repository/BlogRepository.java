@@ -42,4 +42,7 @@ public interface BlogRepository extends JpaRepository<Blog, Integer> {
 
     @Query(value = "select count(id) from blog where active = true AND hot = true", nativeQuery = true)
     Integer countAllHot();
+
+    @Query(value = "select slug from blog where id = ?1 and active = true", nativeQuery = true)
+    String findSlugById(Integer id);
 }

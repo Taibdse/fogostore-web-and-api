@@ -1,5 +1,6 @@
 package com.example.fogostore.controller.mvc;
 
+import com.example.fogostore.common.constants.RoutePaths;
 import com.example.fogostore.common.enumeration.PageType;
 import com.example.fogostore.model.PaymentMethod;
 import com.example.fogostore.service.PaymentMethodService;
@@ -20,7 +21,7 @@ public class CheckoutPageController {
     @Autowired
     SharedMvcService sharedMvcService;
 
-    @RequestMapping(value = {"/dat-hang"})
+    @RequestMapping(value = {RoutePaths.CHECKOUT})
     public String checkoutPageAction(Model model){
         List<PaymentMethod> paymentMethods = paymentMethodService.getAll();
         model.addAttribute("paymentMethods", paymentMethods);

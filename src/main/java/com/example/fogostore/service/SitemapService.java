@@ -71,13 +71,13 @@ class SitemapServiceImpl implements SitemapService {
         try {
             wsg = WebSitemapGenerator.builder(WEB_DOMAIN, new File(sitemapLocation)).dateFormat(dateFormat).build();
             wsg.addUrl(createSitemapUrl(WEB_DOMAIN, new Date()));
-            wsg.addUrl(createSitemapUrl(getFullUrl(RoutePaths.HOME_PAGE), new Date()));
-            wsg.addUrl(createSitemapUrl(getFullUrl(RoutePaths.ABOUT_US_PAGE), new Date()));
+            wsg.addUrl(createSitemapUrl(getFullUrl(RoutePaths.HOME), new Date()));
+            wsg.addUrl(createSitemapUrl(getFullUrl(RoutePaths.ABOUT_US), new Date()));
 
             List<Product> products = productRepository.findAllActiveWithoutPagination();
 
             for (Product product : products) {
-                String url = getFullUrl(RoutePaths.PRODUCT_PAGE + "/" + product.getSlug());
+                String url = getFullUrl(RoutePaths.PRODUCT + "/" + product.getSlug());
                 wsg.addUrl(createSitemapUrl(url, new Date()));
             }
 
@@ -91,7 +91,7 @@ class SitemapServiceImpl implements SitemapService {
             for (Category category : categories) {
                 Integer countProducts = productRepository.countByCategoryId(category.getId());
                 for (int i = 1; i <= Math.ceil((double) countProducts / PageSize.PRODUCT_PAGE_SIZE); i++) {
-                    String url = getFullUrl(RoutePaths.PRODUCT_CATEGORY_PAGE + "/" + category.getSlug() + "?page=" + i);
+                    String url = getFullUrl(RoutePaths.PRODUCT_CATEGORY + "/" + category.getSlug() + "?page=" + i);
                     for (String productSortBy : productSortByList) {
                         String sortUrl = url + "&sortBy=" + productSortBy;
                         wsg.addUrl(createSitemapUrl(sortUrl, new Date()));
@@ -113,17 +113,17 @@ class SitemapServiceImpl implements SitemapService {
 
             List<Blog> blogs = blogRepository.findAllActive();
             for (Blog blog : blogs) {
-                String url = getFullUrl(RoutePaths.BLOG_PAGE + "/" + blog.getSlug());
+                String url = getFullUrl(RoutePaths.BLOG + "/" + blog.getSlug());
                 wsg.addUrl(createSitemapUrl(url, blog.getUpdatedAt()));
             }
             for (int i = 1; i <= Math.ceil((double) blogs.size() / PageSize.DEFAULT_PAGE_SIZE); i++) {
-                String url = getFullUrl(RoutePaths.BLOG_PAGE + "?page=" + i);
+                String url = getFullUrl(RoutePaths.BLOG + "?page=" + i);
                 wsg.addUrl(createSitemapUrl(url, new Date()));
             }
 
             List<BasicPolicy> policies = policyRepository.findAllActive();
             for (BasicPolicy policy : policies) {
-                String url = getFullUrl(RoutePaths.POLICY_PAGE + "/" + policy.getSlug());
+                String url = getFullUrl(RoutePaths.POLICY + "/" + policy.getSlug());
                 wsg.addUrl(createSitemapUrl(url, new Date()));
             }
         } catch (MalformedURLException e) {

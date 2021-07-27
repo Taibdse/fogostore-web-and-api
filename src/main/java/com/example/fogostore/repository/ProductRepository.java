@@ -115,4 +115,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     @Query(value = "select count(id) from product where active = true", nativeQuery = true)
     Integer countAll();
+
+    @Query(value = "select slug from product where active = true and id = ?1", nativeQuery = true)
+    String findSlugById(Integer id);
 }

@@ -55,6 +55,10 @@ public interface ProductService {
     List<ProductDto> getSuggestedProducts(String keyword);
 
     List<BasicProduct> getAllBasicProducts();
+
+    HashMap<String, String> validate(ProductDto productDto, Boolean editMode);
+
+    String getSlugById(Integer id);
 }
 
 @Service
@@ -107,6 +111,11 @@ class ProductServiceImpl implements ProductService {
     private final String BRAND_TYPE = "BRAND_TYPE";
 
     @Override
+    public String getSlugById(Integer id) {
+        return productRepository.findSlugById(id);
+    }
+
+    @Override
     public List<BasicProduct> getAllBasicProducts() {
         return productRepository.findAllActive();
     }
@@ -133,17 +142,42 @@ class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public HashMap<String, String> validate(ProductDto productDto, Boolean editMode) {
+        HashMap<String, String> errors = new HashMap<>();
+        if (StringUtils.isEmpty(productDto.getName())) {
+            errors.put("NAME_REQUIRED", "Vui lòng nhập tên sản phẩm!");
+        }
+        if (StringUtils.isEmpty(productDto.getSlug())) {
+            errors.put("SLUG_REQUIRED", "Vui lòng nhập slug sản phẩm!");
+        }
+
+        Product foundBySlug = productRepository.findBySlug(productDto.getSlug());
+
+        if (editMode) {
+            if (!productRepository.existsById(productDto.getId())) {
+                errors.put("NOT_FOUND", "Không tim thấy sản phẩm này!");
+            } else if (foundBySlug != null && !foundBySlug.getId().equals(productDto.getId())) {
+                errors.put("SLUG_EXISTED", "Slug này đã tồn tại!");
+            }
+        } else {
+            if (foundBySlug != null) {
+                errors.put("SLUG_EXISTED", "Slug này đã tồn tại!");
+            }
+        }
+
+        return errors;
+    }
+
+    @Override
     public ResultBuilder create(ProductDto productDto) {
         ResultBuilder result = ResultBuilder.build();
+        HashMap<String, String> errors = validate(productDto, false);
+        if (!errors.isEmpty()) {
+            return result.success(false).errors(errors);
+        }
 
         Product product = modelMapper.map(productDto, Product.class);
 
-        String slug = CustomStringUtils.genSlug(product.getName());
-        boolean slugExisted = productRepository.existsBySlugEquals(slug);
-        if (slugExisted) {
-            slug = slug + "-" + new Date().getTime();
-        }
-        product.setSlug(slug);
         product.setActive(true);
         product.setDescription(sharedService.formatEditorContent(product.getDescription()));
         product.setTechInfo(sharedService.formatEditorContent(product.getTechInfo()));
@@ -166,6 +200,7 @@ class ProductServiceImpl implements ProductService {
         }
 
         List<Image> imageList = new ArrayList();
+        String slug = product.getSlug();
         Image mainImage = saveProductImageFile(productDto.getMainImage(), slug, true, 1);
         mainImage.setProductId(product.getId());
         imageList.add(mainImage);
@@ -228,6 +263,10 @@ class ProductServiceImpl implements ProductService {
     @Override
     public ResultBuilder update(ProductDto productDto) {
         ResultBuilder result = ResultBuilder.build();
+        HashMap<String, String> errors = validate(productDto, true);
+        if (!errors.isEmpty()) {
+            return result.success(false).errors(errors);
+        }
 
         if (!productRepository.existsByIdEquals(productDto.getId())) {
             return result.success(false).errors("NOTFOUND", PRODUCT_NOTFOUND);
@@ -235,12 +274,6 @@ class ProductServiceImpl implements ProductService {
 
         Product product = modelMapper.map(productDto, Product.class);
 
-        String slug = CustomStringUtils.genSlug(product.getName());
-        Product foundBySlug = productRepository.findBySlug(slug);
-        if (foundBySlug != null && foundBySlug.getId() != productDto.getId()) {
-            slug = slug + "-" + new Date().getTime();
-        }
-        product.setSlug(slug);
         product.setDescription(sharedService.formatEditorContent(product.getDescription()));
         product.setTechInfo(sharedService.formatEditorContent(product.getTechInfo()));
 
@@ -268,6 +301,7 @@ class ProductServiceImpl implements ProductService {
         imageRepository.deleteAll(imageList);
 
         List<Image> savedImgList = new ArrayList<>();
+        String slug = product.getSlug();
 
         Image mainImage = saveProductImageFile(productDto.getMainImage(), slug, true, 1);
         productDto.setMainImage(mainImage.getUrl());
