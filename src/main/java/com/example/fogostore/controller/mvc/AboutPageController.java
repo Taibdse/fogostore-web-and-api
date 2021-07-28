@@ -1,5 +1,6 @@
 package com.example.fogostore.controller.mvc;
 
+import com.example.fogostore.common.constants.RoutePaths;
 import com.example.fogostore.common.enumeration.PageType;
 import com.example.fogostore.service.SharedMvcService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ public class AboutPageController {
     @Autowired
     SharedMvcService sharedMvcService;
 
-    @RequestMapping(value = {"/ve-chung-toi"})
+    @RequestMapping(value = {RoutePaths.ABOUT_US})
     public String aboutPageAction(Model model){
         sharedMvcService.addSharedModelAttributes(model, PageType.ABOUT_US);
         return "user/pages/about-us";

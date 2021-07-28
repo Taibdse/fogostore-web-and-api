@@ -9,6 +9,7 @@ import com.example.fogostore.builder.ResultBuilder;
 import com.example.fogostore.dto.blog.BasicBlog;
 import com.example.fogostore.dto.blog.BlogDto;
 import com.example.fogostore.model.Blog;
+import com.example.fogostore.model.Category;
 import com.example.fogostore.model.PageMetadata;
 import com.example.fogostore.repository.BlogRepository;
 import com.example.fogostore.repository.PageMetadataRepository;
@@ -47,6 +48,8 @@ public interface BlogService {
     ResultBuilder saveSortIndexes(List<BlogDto> blogs);
 
     List<BlogDto> getHotBlogs();
+
+    String getSlugById(Integer id);
 }
 
 @Service
@@ -69,6 +72,12 @@ class BlogServiceImpl implements BlogService {
     SharedService sharedService;
 
     private final String NOTFOUND = "Không tìm thấy bài viết này";
+    private final String SLUG_EXISTED = "Slug đã tồn tài!";
+
+    @Override
+    public String getSlugById(Integer id) {
+        return blogRepository.findSlugById(id);
+    }
 
     @Override
     public List<BlogDto> getHotBlogs() {
@@ -125,13 +134,24 @@ class BlogServiceImpl implements BlogService {
     public HashMap<String, String> validate(BlogDto blog, boolean editMode) {
         HashMap<String, String> errors = new HashMap<>();
 
+        Blog foundBySlug = blogRepository.findBySlug(blog.getSlug());
         if (editMode) {
-            BlogDto found = getById(blog.getId());
-            if (found == null) {
+            if (blog.getId() == null) {
                 errors.put("NOTFOUND", NOTFOUND);
-                return errors;
+            } else {
+                boolean existed = blogRepository.existsById(blog.getId());
+                if (!existed) {
+                    errors.put("NOTFOUND", NOTFOUND);
+                } else if (foundBySlug != null && !foundBySlug.getId().equals(blog.getId())) {
+                    errors.put("SLUG_EXISTED", SLUG_EXISTED);
+                }
+            }
+        } else {
+            if (foundBySlug != null) {
+                errors.put("SLUG_EXISTED", SLUG_EXISTED);
             }
         }
+        if (errors.size() > 0) return errors;
 
         HashMap<String, String> imageErrors = fileUtils.checkImage(blog.getImage(), editMode);
         if (imageErrors.size() > 0) return imageErrors;
@@ -147,16 +167,12 @@ class BlogServiceImpl implements BlogService {
         if (errors.size() > 0) return result.success(false).errors(errors);
 
         Blog savedBlog = modelMapper.map(blog, Blog.class);
-        String slug = CustomStringUtils.genSlug(blog.getTitle());
-        Blog found = blogRepository.findBySlug(slug);
-        if (found != null) {
-            slug = slug + '-' + new Date().getTime();
-        }
-        savedBlog.setSlug(slug);
+
         savedBlog.setActive(true);
         savedBlog.setType(BlogType.NEWS);
         savedBlog.setContent(sharedService.formatEditorContent(savedBlog.getContent()));
 
+        String slug = savedBlog.getSlug();
         HashMap<String, String> value = fileUtils.saveImage(blog.getImage(), slug);
         savedBlog.setImage(value.get("fileName"));
 
@@ -180,12 +196,7 @@ class BlogServiceImpl implements BlogService {
 
         Blog savedBlog = modelMapper.map(blog, Blog.class);
         Blog foundById = blogRepository.findById(blog.getId()).orElse(null);
-        String slug = CustomStringUtils.genSlug(blog.getTitle());
-        Blog found = blogRepository.findBySlug(slug);
-        if (found != null && found.getId() != blog.getId()) {
-            slug = slug + '-' + new Date().getTime();
-        }
-        savedBlog.setSlug(slug);
+
         savedBlog.setContent(sharedService.formatEditorContent(savedBlog.getContent()));
 
         String newImage = blog.getImage();
@@ -193,6 +204,7 @@ class BlogServiceImpl implements BlogService {
         if (fileUtils.isImageUrl(newImage) || StringUtils.isEmpty(newImage)) {
             savedBlog.setImage(oldImage);
         } else {
+            String slug = savedBlog.getSlug();
             HashMap<String, String> value = fileUtils.saveImage(newImage, slug);
             fileUtils.removeFile(oldImage);
             savedBlog.setImage(value.get("fileName"));

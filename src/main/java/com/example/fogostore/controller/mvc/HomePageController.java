@@ -1,5 +1,6 @@
 package com.example.fogostore.controller.mvc;
 
+import com.example.fogostore.common.constants.RoutePaths;
 import com.example.fogostore.common.enumeration.PageType;
 import com.example.fogostore.common.utils.tree.Node;
 import com.example.fogostore.common.utils.tree.TreeUtils;
@@ -35,7 +36,7 @@ public class HomePageController {
     @Autowired
     BlogService blogService;
 
-    @RequestMapping(value = {"/", "/trang-chu"})
+    @RequestMapping(value = {RoutePaths.INDEX, RoutePaths.HOME})
     public String homeAction(Model model){
         List<ProductDto> hotPorducts = productService.getHotProducts();
         List<BlogDto> hotBlogs = blogService.getHotBlogs();

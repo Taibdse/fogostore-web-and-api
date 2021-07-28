@@ -3,6 +3,7 @@ package com.example.fogostore.service;
 import com.example.fogostore.common.utils.CustomStringUtils;
 import com.example.fogostore.builder.ResultBuilder;
 import com.example.fogostore.dto.policy.BasicPolicy;
+import com.example.fogostore.model.Category;
 import com.example.fogostore.model.Policy;
 import com.example.fogostore.repository.PolicyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public interface PolicyService {
@@ -25,6 +27,8 @@ public interface PolicyService {
     Policy getById(Integer id);
 
     Policy getBySlug(String slug);
+
+    String getSlugById(Integer id);
 }
 
 @Service
@@ -37,38 +41,59 @@ class PolicyServiceImpl implements PolicyService {
     SharedService sharedService;
 
     private final String NOT_FOUND = "không tìm thấy chính sách này!";
+    private final String SLUG_EXISTED = "Slug đã tồn tại!";
 
+    @Override
+    public String getSlugById(Integer id) {
+        return policyRepository.findSlugById(id);
+    }
+
+    public HashMap<String, String> validate(Policy policy, Boolean editMode) {
+        HashMap<String, String> errors = new HashMap<>();
+
+        Policy foundBySlug = policyRepository.findBySlugEquals(policy.getSlug());
+        if (editMode) {
+            if (policy.getId() == null) {
+                errors.put("NOTFOUND", NOT_FOUND);
+            } else {
+                boolean existed = policyRepository.existsById(policy.getId());
+                if (!existed) {
+                    errors.put("NOTFOUND", NOT_FOUND);
+                } else if (foundBySlug != null && !foundBySlug.getId().equals(policy.getId())) {
+                    errors.put("SLUG_EXISTED", SLUG_EXISTED);
+                }
+            }
+        } else {
+            if (foundBySlug != null) {
+                errors.put("SLUG_EXISTED", SLUG_EXISTED);
+            }
+        }
+        return errors;
+    }
 
     @Override
     public ResultBuilder create(Policy policy) {
-        String slug = CustomStringUtils.genSlug(policy.getName());
-        if (policyRepository.existsBySlug(slug)) {
-            slug += "-" + new Date().getTime();
+        ResultBuilder result = new ResultBuilder();
+        HashMap<String, String> errors = validate(policy, false);
+        if (errors.size() > 0) {
+            return result.success(false).errors(errors);
         }
-        policy.setSlug(slug);
+
         policy.setActive(true);
         policy.setContent(sharedService.formatEditorContent(policy.getContent()));
         policy = policyRepository.save(policy);
 
-        return ResultBuilder.build().data(policy).success(true);
+        return result.data(policy).success(true);
     }
 
     @Override
     public ResultBuilder update(Policy policy) {
-        ResultBuilder result = ResultBuilder.build();
-        if (policy.getId() == null) {
-            return result.errors("NOTFOUND", NOT_FOUND).success(false);
+        ResultBuilder result = new ResultBuilder();
+        HashMap<String, String> errors = validate(policy, true);
+        if (errors.size() > 0) {
+            return result.success(false).errors(errors);
         }
-        Policy found = policyRepository.findById(policy.getId()).orElse(null);
-        if (found == null || !found.isActive()) {
-            return result.errors("NOTFOUND", NOT_FOUND).success(false);
-        }
-        String slug = CustomStringUtils.genSlug(policy.getName());
-        Policy foundBySlug = policyRepository.findBySlugEquals(slug);
-        if (foundBySlug != null && foundBySlug.getId() != policy.getId()) {
-            slug += "-" + new Date().getTime();
-        }
-        policy.setSlug(slug);
+
         policy.setContent(sharedService.formatEditorContent(policy.getContent()));
         policy = policyRepository.save(policy);
 
@@ -80,10 +105,6 @@ class PolicyServiceImpl implements PolicyService {
         return policyRepository.findAllActive();
     }
 
-//    public List<Policy> getBasicActiveEntityList(String slug){
-//        Query query = entityManager.createNativeQuery("select id, name, type, slug, active from policy where active = true");
-//        return (List<Policy>) query.getResultList();
-//    }
 
     @Override
     public Policy getById(Integer id) {
@@ -100,12 +121,11 @@ class PolicyServiceImpl implements PolicyService {
         ResultBuilder result = ResultBuilder.build();
         Policy found = policyRepository.findById(id).orElse(null);
         if (found == null || !found.isActive()) {
-            result.errors("NOTFOUND", NOT_FOUND).success(false);
+            return result.errors("NOTFOUND", NOT_FOUND).success(false);
         } else {
             found.setActive(false);
             policyRepository.save(found);
         }
-        result.data(found).success(true);
-        return result;
+        return result.data(found).success(true);
     }
 }

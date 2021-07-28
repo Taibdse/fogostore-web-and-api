@@ -24,18 +24,27 @@ import java.util.stream.Collectors;
 
 public interface CategoryService {
     ResultBuilder create(CategoryDto categoryDto);
+
     ResultBuilder update(CategoryDto categoryDto);
+
     ResultBuilder delete(List<Integer> ids);
+
     CategoryDto getById(int id);
+
     CategoryDto getBySlug(String slug);
+
     List<Category> getAllActive();
+
     List<Integer> getChildIds(int id);
+
     Map<Integer, Node> getActiveTree();
+
     ResultBuilder saveSortIndexes(List<CategoryDto> categoryDtos);
+
 }
 
 @Service
-class CategoryServiceImpl implements CategoryService{
+class CategoryServiceImpl implements CategoryService {
 
     @Autowired
     CategoryRepository categoryRepository;
@@ -50,6 +59,7 @@ class CategoryServiceImpl implements CategoryService{
     FileUtils fileUtils;
 
     private final String NOTFOUND = "Không tìm thấy danh mục này!";
+    private final String SLUG_EXISTED = "Slug đã tồn tại!";
     private final String CAN_NOT_CREATE_CHILD = "Không thể tạo danh mục con!";
     private final String CAN_NOT_FIND_PARENT = "Không thể tìm thấy danh mục cha!";
     private final String CAN_NOT_SET_PARENT = "Danh mục cha không hợp lệ!";
@@ -66,39 +76,47 @@ class CategoryServiceImpl implements CategoryService{
             category.setSortIndex(mapIdSortIndex.get(category.getId()));
         }
         categoryRepository.saveAll(categoryList);
-        return  ResultBuilder.build().success(true).data(categoryList);
+        return ResultBuilder.build().success(true).data(categoryList);
     }
 
-    public HashMap<String, String> validate(CategoryDto categoryDto, boolean editMode){
+    public HashMap<String, String> validate(CategoryDto categoryDto, boolean editMode) {
         HashMap<String, String> errors = new HashMap<>();
 
-        if(editMode){
-            if(categoryDto.getId() == null){
+        Category foundBySlug = categoryRepository.findBySlug(categoryDto.getSlug());
+
+        if (editMode) {
+            if (categoryDto.getId() == null) {
                 errors.put("NOTFOUND", NOTFOUND);
             } else {
                 boolean existed = categoryRepository.existsById(categoryDto.getId());
-                if(!existed){
+                if (!existed) {
                     errors.put("NOTFOUND", NOTFOUND);
+                } else if (foundBySlug != null && !foundBySlug.getId().equals(categoryDto.getId())) {
+                    errors.put("SLUG_EXISTED", SLUG_EXISTED);
                 }
             }
-            if(errors.size() > 0) return errors;
+        } else {
+            if (foundBySlug != null) {
+                errors.put("SLUG_EXISTED", SLUG_EXISTED);
+            }
         }
+        if (errors.size() > 0) return errors;
 
-        HashMap<String, String> imageErrors =  fileUtils.checkImage(categoryDto.getImage(), editMode);
-        if(imageErrors.size() > 0) return imageErrors;
+        HashMap<String, String> imageErrors = fileUtils.checkImage(categoryDto.getImage(), editMode);
+        if (imageErrors.size() > 0) return imageErrors;
 
 
         Integer parentId = categoryDto.getParentId();
-        if(parentId != null){
+        if (parentId != null) {
             Category parent = categoryRepository.findById(parentId).orElse(null);
-            if(parent != null){
-                if(parentId == categoryDto.getId()){
+            if (parent != null) {
+                if (parentId == categoryDto.getId()) {
                     errors.put("CAN_NOT_SET_PARENT", CAN_NOT_SET_PARENT);
-                } else if(parent.getParentId() != null) {
+                } else if (parent.getParentId() != null) {
                     Category grandParent = categoryRepository.findById(parent.getParentId()).orElse(null);
-                    if(grandParent.getParentId() != null){
+                    if (grandParent.getParentId() != null) {
                         boolean existed = categoryRepository.existsById(grandParent.getParentId());
-                        if(existed){
+                        if (existed) {
                             errors.put("CAN_NOT_CREATE_CHILD", CAN_NOT_CREATE_CHILD);
                         }
                     }
@@ -114,20 +132,13 @@ class CategoryServiceImpl implements CategoryService{
     public ResultBuilder create(CategoryDto categoryDto) {
         ResultBuilder result = new ResultBuilder();
         HashMap<String, String> errors = validate(categoryDto, false);
-        if(errors.size() > 0){
+        if (errors.size() > 0) {
             return result.success(false).errors(errors);
         }
 
-        String slug = CustomStringUtils.genSlug(categoryDto.getName());
         Category category = modelMapper.map(categoryDto, Category.class);
 
-        Category found = categoryRepository.findBySlug(slug);
-        if(found != null){
-            slug = slug + '-' + new Date().getTime();
-        }
-
-        category.setSlug(slug);
-
+        String slug = category.getSlug();
         HashMap<String, String> value = fileUtils.saveImage(categoryDto.getImage(), slug);
         category.setImage(value.get("fileName"));
 
@@ -147,23 +158,15 @@ class CategoryServiceImpl implements CategoryService{
         ResultBuilder result = new ResultBuilder();
         result.setSuccess(false);
         result.setErrors(validate(categoryDto, true));
-        if(result.getErrors().size() > 0) return result;
-
+        if (result.getErrors().size() > 0) return result;
 
         Category category = categoryRepository.findById(categoryDto.getId()).orElse(null);
         Category newCategory = modelMapper.map(categoryDto, Category.class);
 
-
-        String slug = CustomStringUtils.genSlug(categoryDto.getName());
-        Category found = categoryRepository.findBySlug(slug);
-        if(found != null && found.getId() != categoryDto.getId()){
-            slug = slug + '-' + new Date().getTime();
-        }
-        newCategory.setSlug(slug);
-
+        String slug = categoryDto.getSlug();
         String newImage = categoryDto.getImage();
         String oldImage = category.getImage();
-        if(fileUtils.isImageUrl(newImage) || StringUtils.isEmpty(newImage)){
+        if (fileUtils.isImageUrl(newImage) || StringUtils.isEmpty(newImage)) {
             newCategory.setImage(oldImage);
         } else {
             HashMap<String, String> value = fileUtils.saveImage(newImage, slug);
@@ -176,7 +179,7 @@ class CategoryServiceImpl implements CategoryService{
         //save page meta data
         PageMetadata pageMetadata = categoryDto.getPageMetadata();
         PageMetadata currentPageMetadata = pageMetadataRepository.findByCategoryId(category.getId());
-        if(currentPageMetadata != null){
+        if (currentPageMetadata != null) {
             pageMetadata.setId(currentPageMetadata.getId());
         }
         pageMetadata.setCategoryId(category.getId());
@@ -198,8 +201,8 @@ class CategoryServiceImpl implements CategoryService{
         return toDto(category);
     }
 
-    CategoryDto toDto(Category category){
-        if(category == null) return null;
+    CategoryDto toDto(Category category) {
+        if (category == null) return null;
         CategoryDto categoryDto = modelMapper.map(category, CategoryDto.class);
         categoryDto.setPageMetadata(pageMetadataRepository.findByCategoryId(category.getId()));
         return categoryDto;
@@ -225,12 +228,10 @@ class CategoryServiceImpl implements CategoryService{
         List<Category> categories = categoryRepository.findAllActive();
         Map<Integer, Node> categoryTree = TreeUtils.convertCategoryListToTree(categories);
         for (Category category : categories) {
-            if(category.getParentId() != null){
+            if (category.getParentId() != null) {
                 categoryTree.remove(category.getId());
             }
         }
         return categoryTree;
     }
-
-
 }

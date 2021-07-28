@@ -1,5 +1,6 @@
 package com.example.fogostore.controller.mvc;
 
+import com.example.fogostore.common.constants.RoutePaths;
 import com.example.fogostore.common.enumeration.PageType;
 import com.example.fogostore.service.SharedMvcService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ public class CartPageController {
     @Autowired
     SharedMvcService sharedMvcService;
 
-    @RequestMapping(value = {"/gio-hang"})
+    @RequestMapping(value = {RoutePaths.CART})
     public String cartPageAction(Model model){
         sharedMvcService.addSharedModelAttributes(model, PageType.CART);
         return "user/pages/cart";
