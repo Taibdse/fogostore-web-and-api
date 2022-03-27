@@ -21,7 +21,7 @@ var $ = jQuery.noConflict();
     /* =  loader
     /*-------------------------------------------------*/
     Pace.on("done", function(){
-        $("#myloader").fadeOut(800);
+        $("#myloader").fadeOut(200);
     });
     /*-------------------------------------------------*/
     /* =  Menu
