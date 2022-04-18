@@ -27,7 +27,7 @@ spring:
 server:
   port: ${PORT:443}
   ssl:
-    key-store: /deployments/fogostore/ssl/20210508/fogostore_vn.p12
+    key-store: /deployments/fogostore/ssl/20220418/fogostore_vn.p12
     key-store-password: Fogostore@123
     key-alias: fogostorevn
     key-store-type: PKCS12
