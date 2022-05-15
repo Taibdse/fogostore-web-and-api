@@ -20,9 +20,19 @@ var $ = jQuery.noConflict();
     /*-------------------------------------------------*/
     /* =  loader
     /*-------------------------------------------------*/
+    const startTime = new Date();
     Pace.on("done", function(){
-        $("#myloader").fadeOut(200);
+        console.log('pace on done ', new Date() - startTime);
+        // $("#myloader").fadeOut(200);
     });
+    $(window).on('load', function(){
+        console.log('window on load ', new Date() - startTime);
+        // $("#myloader").fadeOut(200);
+    })
+    setTimeout(function(){
+        console.log('setTimeout', new Date() - startTime);
+        $("#myloader").fadeOut(0);
+    }, 0)
     /*-------------------------------------------------*/
     /* =  Menu
     /*-------------------------------------------------*/
