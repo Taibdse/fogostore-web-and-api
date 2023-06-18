@@ -2,10 +2,20 @@
 <%@ tag pageEncoding="UTF-8" trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="layout" tagdir="/WEB-INF/tags" %>
 <%@ attribute name="product" type="com.example.fogostore.dto.product.ProductDto" %>
-<div class="single-item shop one-item design branding product-card">
+<div 
+    class="single-item shop one-item design branding product-card"
+    data-id="${product.id}"
+    data-price="${product.price}"
+    data-name="${product.name}"
+    data-image="${product.mainImage}"
+    data-slug="${product.slug}"
+    data-type-id="${product.type != null ? product.type.id : null}"
+    data-type-name="${product.type != null ? product.type.name : ""}"
+    data-available="${product.available ? 1 : 0}">
     <div class="item" style="margin: 0">
         <img src="${product.mainImage}" alt="${product.name}">
         <div class="content" style="margin-bottom: 10px">
+            <i class="icon ion-ios-cart-outline add-to-cart"></i>
             <h5 class="font-weight-bold" style="font-size: 0.9em">${product.name}</h5>
             <c:if test="${product.productTypes.size() == 0}">
                 <div class="price-block">

@@ -1,23 +1,6 @@
 var searchProductTimeout;
 var $searchProductInput;
 
-var UrlUtils = (function () {
-    function getParameterByName(name, url) {
-        if (!url) url = window.location.href;
-        name = name.replace(/[\[\]]/g, '\\$&');
-        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-            results = regex.exec(url);
-        if (!results) return null;
-        if (!results[2]) return '';
-        return decodeURIComponent(results[2].replace(/\+/g, ' '));
-    }
-
-    return {
-        getParameterByName: getParameterByName
-    }
-})();
-
-
 function bindEventsChangeCollapseIcon() {
     $('.collapse').on('show.bs.collapse', function (e) {
         $(e.target).siblings('span').find('i').removeClass('fa-plus').addClass('fa-minus');
