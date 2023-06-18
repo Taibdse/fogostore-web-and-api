@@ -105,6 +105,10 @@ var cartModule = (function () {
                 return cartData[index].price * cartData[index].quantity;
             }
             return 0;
+        },
+
+        clearCart: function() {
+            model.saveCart([]);
         }
 
     }
@@ -281,65 +285,12 @@ var cartModule = (function () {
                 $('#cart-empty').html('');
                 $cartAction.removeClass('d-none');
                 view.renderProductsOnCartTable($cartTable, cartData, true);
-                // var $thead = ' <thead>' +
-                //     '<tr>' +
-                //     '<th class="">Sản phẩm</th>' +
-                //     '<th class="">Ảnh</th>' +
-                //     '<th class="">Thông tin</th>' +
-                //     '<th class="">Đơn Giá</th>' +
-                //     '<th class="">Số lượng</th>' +
-                //     '<th class="">Tổng tiền</th>' +
-                //     '<th class="">Xóa</th>' +
-                //     '</tr>' +
-                //     '</thead>';
-
-                // var $tbody = $('<tbody></tbody>');
-
-                // $cartTable.append($thead).append($tbody);
-
-                // cartData.forEach(function (item) {
-                //     var $cartItem = '<tr>' +
-                //         '<td class="product-name">' +
-                //         '<a href="/san-pham/' + item.slug + '">' + item.name + '</a>' +
-                //         '</td>' +
-                //         '<td class="product-thumbnail">' +
-                //         '<a href="/san-pham/' + item.slug + '"><img src="' + item.image + '" alt=""></a>' +
-                //         '</td>' +
-                //         '<td class="">' + item.productTypeName + '</td>' +
-                //         '<td class="product-price text-nowrap">' +
-                //         '<span class="amount">' + StringUtils.getMoneyFormat(item.price) + ' đ</span>' +
-                //         '</td>' +
-                //         '<td class="product-quantity">' +
-                //         '<input type="number" step="1" min="1" max="10" name="quantity" value="' + item.quantity + '" class="" size="4">' +
-                //         '</td>' +
-                //         '<td class="product-subtotal text-nowrap">' + StringUtils.getMoneyFormat(item.totalPrice) + ' đ</td>' +
-                //         '<td class="product-cart-icon">' +
-                //         '<a href="#" class="delete-product"><i class="icon ion-trash-a" style="font-size: 20px"></i></a>' +
-                //         '</td>' +
-                //         '</tr>'
-
-                //     $tbody.append($cartItem);
-
-                //     $tbody.find('tr td.product-cart-icon a.delete-product').on('click', function (e) {
-                //         e.preventDefault();
-                //         viewModel.handleRemoveCartItem(item);
-                //     })
-
-                //     $tbody.find('tr td.product-quantity input').last().on('input', function (e) {
-                //         viewModel.handleChangeQuantity(e, item.id);
-                //     })
-                // });
-
             }
         },
 
         renderCartOnCheckoutPage: function (cartData) {
             var $cartTable = $('.cart.checkout');
-
-            if (cartData.length == 0) return location.href = "/";
-
             view.renderProductsOnCartTable($cartTable, cartData, false);
-           
         },
 
         showProductAddedMessage: function () {
@@ -378,10 +329,6 @@ var cartModule = (function () {
             }
 
             $addToCart.on('click', viewModel.handleAddProductInCartDetails)
-        },
-
-        clearCart: function () {
-            model.saveCart([]);
         },
 
         toggleLoader: function (open) {
@@ -480,7 +427,7 @@ var cartModule = (function () {
         },
 
         handleClearCart: function () {
-            model.saveCart([]);
+            model.clearCart();
             viewModel.updateCartOnMenu();
             viewModel.updateCartOnCartPage();
         },
@@ -488,12 +435,22 @@ var cartModule = (function () {
         init: function () {
             view.bindEvents();
             var cartData = model.getCartData();
+
+            // redirect to homepage when user in checkout page without cart-products
+            if(location.href.includes('/dat-hang') && cartData.length === 0) return location.href = "/";
+
             var ids = [];
             for (var item of cartData) {
                 ids.push(item.productId);
             }
-            if(ids.length === 0) return;
+            if(ids.length === 0) {
+                view.renderCartOnCartPage(cartData);
+                view.renderCartOnCheckoutPage(cartData);
+                viewModel.updateCartOnMenu();
+                return;
+            }
 
+            // call api to fetch latest cart-products info
             view.toggleLoader(true)
             productService.getProductsInCart(ids.join(','), function (res) {
                 var loadedProducts = res;

@@ -80,7 +80,7 @@ var orderModule = (function () {
                     })
 
                     setTimeout(function (){
-                        cartModule.viewModel.handleClearCart();
+                        cartModule.model.clearCart();
                         delete order.orderDetails;
                         model.saveCustomerInfo(order)
                         // location.href = '/don-hang/' + res.data.id;
@@ -129,7 +129,7 @@ var orderModule = (function () {
         init: function (){
             view.bindEvents();
             var customerInfo = model.getCustomerInfo();
-            view.renderCustomerInfo(customerInfo)
+            view.renderCustomerInfo(customerInfo);
         },
     }
 
