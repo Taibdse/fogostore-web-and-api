@@ -14,13 +14,13 @@ public class GlobalExceptionHandler {
     @Autowired
     SharedMvcService sharedMvcService;
 
-    @ExceptionHandler(NoHandlerFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String handleNotFoundError(Model model) {
-        System.out.println("handleNotFoundError");
-        sharedMvcService.addSharedModelAttributes(model, null);
-        return "user/pages/404";
-    }
+//    @ExceptionHandler(NoHandlerFoundException.class)
+//    @ResponseStatus(HttpStatus.NOT_FOUND)
+//    public String handleNotFoundError(Model model) {
+//        System.out.println("handleNotFoundError");
+//        sharedMvcService.addSharedModelAttributes(model, null);
+//        return "user/pages/404";
+//    }
 
 //    @ExceptionHandler(ResponseEntityException.class)
 //    protected ResponseEntity handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {

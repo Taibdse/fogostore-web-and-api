@@ -3,12 +3,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <layout:wrapper>
-    <style>
+    <!-- <style>
         .category-title-header {
             font-weight: bold;
             font-size: 2em;
         }
-    </style>
+    </style> -->
 <%--    <layout:page-header title="Sản phẩm theo danh mục"/>--%>
     <div id="home-wrap" class="content-section">
         <div class="container-fluid" style="padding-top: 30px; padding-bottom: 60px">

@@ -5,6 +5,7 @@
 <layout:wrapper>
 <%--    <layout:page-header title="Bài viết"/>--%>
     <div id="home-wrap" class="content-section">
+        <h3 class="page-title-header">Bài viết</h3>
         <div class="container">
             <div class="row no-margin wrap-text">
                 <section id="news" class="page">

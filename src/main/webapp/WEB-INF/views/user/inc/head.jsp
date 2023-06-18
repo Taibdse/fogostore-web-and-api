@@ -40,6 +40,8 @@
     <link rel="stylesheet" href="/assets/css/bootstrap/bootstrap.min.css">
     <!-- Optional theme -->
     <link rel="stylesheet" href="/assets/css/bootstrap/bootstrap-theme.min.css">
+    <!-- Jquery confirm -->
+    <link rel="stylesheet" href="/assets/css/jquery-confirm.min.css">
     <!-- Custom css -->
     <link rel="stylesheet" href="/assets/css/style.css">
     <!-- Font Awesome -->

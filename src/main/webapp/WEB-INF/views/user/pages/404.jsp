@@ -14,6 +14,7 @@
                         <h1 class="white margin-bottom-extrasmall">404 Not Found<span>.</span></h1>
                         <p class="heading left grey-light margin-bottom">Trang này không tồn tại</p>
                         <a href="/trang-chu" class="btn-alt small white margin-null">Trang chủ</a>
+
                     </div>
                 </div>
             </div>

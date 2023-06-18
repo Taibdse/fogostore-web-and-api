@@ -204,8 +204,8 @@ class OrderServiceImpl implements OrderService{
         orderDto.setTotalProductPrice(totalProductPrice[0]);
         orderDto.setTotalPrice(totalProductPrice[0] + orderDto.getShippingMoney());
 
-        PaymentMethod paymentMethod = paymentMethodRepository.findById(order.getPaymentMethodId()).orElse(null);
-        orderDto.setPaymentMethod(paymentMethod);
+        // PaymentMethod paymentMethod = paymentMethodRepository.findById(order.getPaymentMethodId()).orElse(null);
+        // orderDto.setPaymentMethod(paymentMethod);
 
         return orderDto;
     }
