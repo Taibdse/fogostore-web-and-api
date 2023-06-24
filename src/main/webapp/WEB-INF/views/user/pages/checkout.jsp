@@ -2,7 +2,7 @@
 prefix="layout" tagdir="/WEB-INF/tags" %> <%@ page language="java"
 contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<layout:wrapper>
+<layout:wrapper hideHeaderBanner="true">
   <div id="home-wrap" class="content-section">
     <h3 class="page-title-header">Đặt hàng</h3>
     <div class="container">

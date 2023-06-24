@@ -2,7 +2,7 @@
 <%@ taglib prefix="layout" tagdir="/WEB-INF/tags" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<layout:wrapper>
+<layout:wrapper hideHeaderBanner="true">
     <style>
         .price-block > .current-price {
             font-weight: bold;
@@ -18,7 +18,7 @@
         }
     </style>
 
-    <div id="home-wrap" class="content-section" style="padding-top: 30px;">
+    <div id="home-wrap" class="content-section" style="padding-top: 0px;">
         <c:if test="${product != null}">
         <div data-id="${product.id}"
              data-price="${product.price}"
@@ -30,7 +30,7 @@
              class="d-none"
              id="productDetails"></div>
             <div class="container">
-                <div class="row no-margin wrap-text padding-onlytop-lg">
+                <div class="row no-margin wrap-text">
                     <div class="col-md-6 padding-leftright-null">
                         <div class="text small padding-top-null">
                             <img src="${product.mainImage}" alt="${product.name}" class="img-post">

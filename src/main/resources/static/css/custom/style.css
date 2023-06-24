@@ -814,6 +814,20 @@ header nav.navbar #logo a.navbar-brand img {
     font-size: 12px;
 }
 
+#contact-form .form-field, #search-form .form-field {
+    margin-bottom: 15px;
+    padding: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+#contact-form textarea.form-field, #search-form textarea.form-field {
+    margin-bottom: 15px;
+    padding: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
 /* .table.cart th, .table.cart td {
     padding: 0!important;
 } */
