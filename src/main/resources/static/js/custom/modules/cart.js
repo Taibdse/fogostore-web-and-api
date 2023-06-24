@@ -262,7 +262,7 @@ var cartModule = (function () {
 
             // bind events delete cart-item, update quantity
             if (canEdit) {
-                $tbody.find('tr td.product-cart-icon a.delete-product').on('click', function (e) {
+                $tbody.find('tr td.product-cart-icon a.delete-product').last().on('click', function (e) {
                     e.preventDefault();
                     viewModel.handleRemoveCartItem(item);
                 })
