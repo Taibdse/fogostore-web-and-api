@@ -11,6 +11,7 @@ var orderModule = (function () {
                 return {}
             }
         },
+
         saveCustomerInfo: function (customer) {
             localStorage.setItem(orderKey, JSON.stringify(customer));
         },
@@ -20,8 +21,7 @@ var orderModule = (function () {
         bindEvents: function (){
             $('#btnOrder').on('click', viewModel.handleSubmitOrder);
             $('.form-field').on('input', viewModel.handleChangeCustomInfo);
-
-            $('.payment-methods').on('change', viewModel.handleChangePaymentMethod)
+//            $('.payment-methods').on('change', viewModel.handleChangePaymentMethod)
         },
         renderCustomerInfo: function (customer){
             $('#customerFullname').val(customer.customerFullname);
@@ -59,13 +59,14 @@ var orderModule = (function () {
             var order = view.getCustomerInfo();
 
             var orderDetails = [];
-            cartModule.model.getCartData().forEach(function (cartItem){
+            cartModule.model.getSelectedCartData().forEach(function (cartItem){
                 orderDetails.push({
                     productId: cartItem.productId,
                     quantity: StringUtils.getNumber(cartItem.quantity),
                     productTypeId: cartItem.productTypeId,
                 })
-            })
+            });
+
             if(orderDetails.length == 0) return location.href = '/';
 
             order.orderDetails = orderDetails;
@@ -80,7 +81,7 @@ var orderModule = (function () {
                     })
 
                     setTimeout(function (){
-                        cartModule.model.clearCart();
+                        cartModule.model.clearSelectedCartItems();
                         delete order.orderDetails;
                         model.saveCustomerInfo(order)
                         // location.href = '/don-hang/' + res.data.id;

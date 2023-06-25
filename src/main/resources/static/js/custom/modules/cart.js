@@ -5,7 +5,8 @@ var $countProducts = $('header a.cart span.count');
 var $totalCart = $('header .count-price-add');
 var $cartTable = $('table.cart');
 var $cartAction = $('.cart-action')
-var $addToCart = $('#addToCart')
+var $addToCart = $('#btnAddToCart');
+var $btnBuyNow = $('#btnBuyNow');
 var $btnSelects = $('button.btn-select');
 
 var cartModule = (function () {
@@ -25,22 +26,28 @@ var cartModule = (function () {
             model.saveCart(cartData);
         },
 
-        addToCart: function (product, quantity) {
+        addToCart: function (product) {
             var cartData = model.getCartData();
 
             var canPush = true;
             for (var i = 0; i < cartData.length; i++) {
-                if (model.isSameProduct(cartData[i], product)) {
-                    cartData[i].quantity = cartData[i].quantity + quantity;
+                var cartItem = cartData[i];
+                if (model.isSameProduct(cartItem, product)) {
+                    cartItem.quantity = cartItem.quantity + product.quantity;
                     canPush = false;
                     break;
+                } else if (product.shouldBuyNow) {
+                    cartItem.isSelected = false;
                 }
             }
 
             if (canPush) {
-                product.quantity = quantity;
                 product.id = Math.random().toString();
-                cartData.push(product)
+                cartData.push(product);
+            }
+            if(product.shouldBuyNow) {
+                delete product.shouldBuyNow;
+                product.isSelected = true;
             }
 
             model.saveCart(cartData)
@@ -72,6 +79,11 @@ var cartModule = (function () {
             }
         },
 
+        getSelectedCartData: function() {
+            var cartData = model.getCartData();
+            return cartData.filter(function(item) { return item.isSelected });
+        },
+
         removeItem: function (id) {
             var cartData = model.getCartData();
             var index = model.findItemIndexInCart(id);
@@ -79,6 +91,31 @@ var cartModule = (function () {
                 cartData.splice(index, 1);
             }
             model.saveCart(cartData)
+        },
+
+        updateCartItemSelected: function(cartItemId, checked) {
+            var cartData = model.getCartData();
+            var index = model.findItemIndexInCart(cartItemId);
+            cartData[index].isSelected = checked;
+            model.saveCart(cartData);
+        },
+
+        updateAllCartItemsSelected: function(checked) {
+            var cartData = model.getCartData();
+            cartData.forEach(function(cartItem) {
+                cartItem.isSelected = checked;
+            });
+            model.saveCart(cartData);
+        },
+
+        isSelectedAllCartItems: function() {
+            var cartData = model.getCartData();
+            return cartData.every(function(item) { return item.isSelected });
+        },
+
+        hasSelectedCartItems: function() {
+            var cartData = model.getCartData();
+            return cartData.some(function(item) { return item.isSelected });
         },
 
         getCartTotal: function () {
@@ -109,8 +146,13 @@ var cartModule = (function () {
 
         clearCart: function() {
             model.saveCart([]);
-        }
+        },
 
+        clearSelectedCartItems: function() {
+            var cartData = model.getCartData();
+            var unselectedCartItems = cartData.filter(function(item) { return !item.isSelected });
+            model.saveCart(unselectedCartItems);
+        }
     }
 
     var view = {
@@ -177,101 +219,110 @@ var cartModule = (function () {
 
             $cartTable.html('');
 
-            var $thead = ' <thead>' +
-            '<tr>' +
-            '<th class="">Sản phẩm</th>' +
-            '<th class="">Ảnh</th>' +
-            '<th class="">Thông tin</th>' +
-            '<th class="">Đơn Giá</th>' +
-            '<th class="">Số lượng</th>' +
-            '<th class="">Tổng tiền</th>' +
-            '<th class="">Xóa</th>' +
-            '</tr>' +
-            '</thead>';
+            var $thead = $('<thead></thead>');
 
             if(canEdit) {
-                $thead = ' <thead>' +
-                    '<tr>' +
-                    '<th class="product-name">Sản phẩm</th>' +
-                    '<th class="">Ảnh</th>' +
-                    '<th class="">Thông tin</th>' +
-                    '<th class="">Đơn Giá</th>' +
-                    '<th class="">Số lượng</th>' +
-                    '<th class="">Tổng tiền</th>' +
-                    '<th class="">Xóa</th>' +
-                    '</tr>' +
-                    '</thead>';
+                $thead.html('<tr>' +
+                        '<th class=""><input type="checkbox" class="input-product-selected-all" /></th>' +
+                        '<th class="product-name">Sản phẩm</th>' +
+                        '<th class="">Ảnh</th>' +
+                        '<th class="">Thông tin</th>' +
+                        '<th class="">Đơn Giá</th>' +
+                        '<th class="">Số lượng</th>' +
+                        '<th class="">Tổng tiền</th>' +
+                        '<th class="">Xóa</th>' +
+                    '</tr>');
             } else {
-                $thead = ' <thead>' +
-                    '<tr>' +
+                $thead.html('<tr>' +
                     '<th class="">Sản phẩm</th>' +
                     '<th class="">Ảnh</th>' +
                     '<th class="">Thông tin</th>' +
                     '<th class="">Đơn Giá</th>' +
                     '<th class="">Số lượng</th>' +
                     '<th class="">Tổng tiền</th>' +
-                    '</tr>' +
-                    '</thead>';
+                    '</tr>')
             }
 
-        var $tbody = $('<tbody></tbody>');
+            var $tbody = $('<tbody></tbody>');
 
-        $cartTable.append($thead).append($tbody);
+            $cartTable.append($thead).append($tbody);
 
-        cartData.forEach(function (item) {
-            var $cartItem;
-
-            if(canEdit) {
-                $cartItem = '<tr>' +
-                    '<td class="product-name">' +
-                    '<a href="/san-pham/' + item.slug + '">' + item.name + '</a>' +
-                    '</td>' +
-                    '<td class="product-thumbnail">' +
-                    '<a href="/san-pham/' + item.slug + '"><img src="' + item.image + '" alt=""></a>' +
-                    '</td>' +
-                    '<td class="">' + item.productTypeName + '</td>' +
-                    '<td class="product-price text-nowrap">' +
-                    '<span class="amount">' + StringUtils.getMoneyFormat(item.price) + ' đ</span>' +
-                    '</td>' +
-                    '<td class="product-quantity">' +
-                    '<input type="number" step="1" min="1" max="10" name="quantity" value="' + item.quantity + '" class="" size="4">' +
-                    '</td>' +
-                    '<td class="product-subtotal text-nowrap">' + StringUtils.getMoneyFormat(item.totalPrice) + ' đ</td>' +
-                    '<td class="product-cart-icon">' +
-                    '<a href="#" class="delete-product"><i class="icon ion-trash-a" style="font-size: 20px"></i></a>' +
-                    '</td>' +
-                    '</tr>';
-            } else {
-                $cartItem = '<tr>' +
-                    '<td class="product-name">' +
-                    '<a href="/san-pham/' + item.slug + '">' + item.name + '</a>' +
-                    '</td>' +
-                    '<td class="product-thumbnail">' +
-                    '<a href="/san-pham/' + item.slug + '"><img src="' + item.image + '" alt=""></a>' +
-                    '</td>' +
-                    '<td class="">' + item.productTypeName + '</td>' +
-                    '<td class="product-price text-nowrap">' +
-                    '<span class="amount">' + StringUtils.getMoneyFormat(item.price) + ' đ</span>' +
-                    '</td>' +
-                    '<td class="product-quantity">'+ item.quantity +'</td>' +
-                    '<td class="product-subtotal text-nowrap">' + StringUtils.getMoneyFormat(item.totalPrice) + ' đ</td>' +
-                    '</tr>';
-            }
-
-            $tbody.append($cartItem);
-
-            // bind events delete cart-item, update quantity
+            var $inputProductSelectedAll = $thead.find('tr input.input-product-selected-all');
             if (canEdit) {
-                $tbody.find('tr td.product-cart-icon a.delete-product').on('click', function (e) {
-                    e.preventDefault();
-                    viewModel.handleRemoveCartItem(item);
-                })
-    
-                $tbody.find('tr td.product-quantity input').last().on('input', function (e) {
-                    viewModel.handleChangeQuantity(e, item.id);
-                })
+               if(model.isSelectedAllCartItems()) {
+                    $inputProductSelectedAll.prop('checked', true);
+               }
+               $inputProductSelectedAll.on('change', function (e) {
+                   viewModel.handleChangeAllCartItemsSelected(e)
+               })
             }
-        });
+
+            cartData.forEach(function (item) {
+                var $cartItem;
+
+                if(canEdit) {
+                    $cartItem = '<tr data-id="'+ item.id +'">' +
+                        '<td class="product-name">' +
+                        '<input type="checkbox" class="input-product-selected" />' +
+                        '</td>' +
+                        '<td class="product-name">' +
+                        '<a href="/san-pham/' + item.slug + '">' + item.name + '</a>' +
+                        '</td>' +
+                        '<td class="product-thumbnail">' +
+                        '<a href="/san-pham/' + item.slug + '"><img src="' + item.image + '" alt=""></a>' +
+                        '</td>' +
+                        '<td class="">' + item.productTypeName + '</td>' +
+                        '<td class="product-price text-nowrap">' +
+                        '<span class="amount">' + StringUtils.getMoneyFormat(item.price) + ' đ</span>' +
+                        '</td>' +
+                        '<td class="product-quantity">' +
+                        '<input type="number" step="1" min="1" max="10" name="quantity" value="' + item.quantity + '" class="input-quantity" size="4">' +
+                        '</td>' +
+                        '<td class="product-subtotal text-nowrap">' + StringUtils.getMoneyFormat(item.totalPrice) + ' đ</td>' +
+                        '<td class="product-cart-icon">' +
+                        '<a href="#" class="delete-product"><i class="icon ion-trash-a" style="font-size: 20px"></i></a>' +
+                        '</td>' +
+                        '</tr>';
+                } else {
+                    $cartItem = '<tr data-id="'+ item.id +'">' +
+                        '<td class="product-name">' +
+                        '<a href="/san-pham/' + item.slug + '">' + item.name + '</a>' +
+                        '</td>' +
+                        '<td class="product-thumbnail">' +
+                        '<a href="/san-pham/' + item.slug + '"><img src="' + item.image + '" alt=""></a>' +
+                        '</td>' +
+                        '<td class="">' + item.productTypeName + '</td>' +
+                        '<td class="product-price text-nowrap">' +
+                        '<span class="amount">' + StringUtils.getMoneyFormat(item.price) + ' đ</span>' +
+                        '</td>' +
+                        '<td class="product-quantity">'+ item.quantity +'</td>' +
+                        '<td class="product-subtotal text-nowrap">' + StringUtils.getMoneyFormat(item.totalPrice) + ' đ</td>' +
+                        '</tr>';
+                }
+
+                $tbody.append($cartItem);
+
+                // bind events delete cart-item, update quantity, checkbox select product
+                if (canEdit) {
+                    var $tr = $tbody.find('tr').last();
+
+                    $tr.find('td.product-cart-icon a.delete-product').on('click', function (e) {
+                        e.preventDefault();
+                        viewModel.handleRemoveCartItem(item);
+                    })
+
+                    $tr.find('td.product-quantity input.input-quantity').on('input', function (e) {
+                        viewModel.handleChangeQuantity(e, item.id);
+                    });
+
+                    var $latestInputProductSelected = $tr.find('input.input-product-selected');
+                    $latestInputProductSelected.on('change', function(e) {
+                        viewModel.handleChangeCartItemSelected(e, item);
+                    });
+                    view.checkSelectedCartItem($cartTable, item, item.isSelected);
+                }
+            });
+
         },
 
         renderCartOnCartPage: function (cartData) {
@@ -301,12 +352,74 @@ var cartModule = (function () {
             })
         },
 
+        showNoCartItemSelectedAlert: function() {
+            AlertUtils.showAlert({
+                title: constants.no_cart_item_selected_title,
+                content: constants.no_cart_item_selected_content,
+                type: 'red'
+            })
+        },
+
         renderCartItemTotal: function ($ele, total) {
             $ele.text(StringUtils.getMoneyFormat(total) + ' đ');
         },
 
+        getProductDetailsInfo: function($productDetailsWrapper, isDetailPage) {
+            var newProduct;
+            if(isDetailPage) {
+                var productId = $productDetailsWrapper.data('id');
+                var name = $productDetailsWrapper.data('name');
+                var price = Number($productDetailsWrapper.data('price'));
+                var image = $productDetailsWrapper.data('image');
+                var slug = $productDetailsWrapper.data('slug');
+                var quantity = Number($('#productQuantity').val());
+                var productTypeId = $('.select-product-type.active').data('product-type-id');
+                var productTypeName = $productDetailsWrapper.data('type-name');
+                var available = $productDetailsWrapper.data('available');
+
+                if (!ValidationUtils.isEmpty(productTypeId)) {
+                    price = +$('.select-product-type.active').data('product-type-price');
+                    productTypeName = $('.select-product-type.active').data('product-type-name');
+                }
+
+                newProduct = {
+                    productId: productId,
+                    name: name,
+                    price: price,
+                    image: image,
+                    slug: slug,
+                    productTypeId: productTypeId,
+                    productTypeName: productTypeName,
+                    available: available,
+                    quantity
+                }
+            } else {
+                newProduct = {
+                    productId: $productDetailsWrapper.data('id'),
+                    name: $productDetailsWrapper.data('name'),
+                    price: Number($productDetailsWrapper.data('price')),
+                    image: $productDetailsWrapper.data('image'),
+                    slug: $productDetailsWrapper.data('slug'),
+                    productTypeId: $productDetailsWrapper.data('type-id'),
+                    productTypeName: $productDetailsWrapper.data('type-name'),
+                    available: $productDetailsWrapper.data('available'),
+                    quantity: 1
+                }
+            }
+
+            if (newProduct.available == '0') {
+                AlertUtils.showAlert({
+                    title: constants.product_runout_title,
+                    content: constants.product_runout_content,
+                    type: 'red'
+                });
+                return null;
+            }
+            return newProduct;
+        },
+
         bindEvents: function () {
-            //init events for product search page
+            // init events for product search page
             for (var i = 0; i < $productCardList.length; i++) {
                 $productCardList.eq(i).find('i.add-to-cart').on('click', viewModel.handleAddToCart);
             }
@@ -328,18 +441,55 @@ var cartModule = (function () {
                 })
             }
 
-            $addToCart.on('click', viewModel.handleAddProductInCartDetails)
+            $addToCart.on('click', viewModel.handleAddProductInCartDetails);
+
+            $btnBuyNow.on('click', viewModel.handleBuyNow);
+
+            $('#btn-continue-order').on('click', viewModel.handleProcessCheckout)
         },
 
         toggleLoader: function (open) {
             if(open) $("#myloader").fadeIn(0);
             else $("#myloader").fadeOut(0);
-            // if (open) $('#ftco-loader').addClass('show');
-            // else $('#ftco-loader').removeClass('show');
-        }
+        },
+
+        redirectToCheckoutPage: function() {
+            window.location.href = "/dat-hang";
+        },
+
+        checkSelectedCartHeader: function ($cartTable, checked) {
+            $cartTable.find('thead input.input-product-selected-all').prop('checked', checked);
+        },
+
+        checkSelectedAllCartItem: function($cartTable, checked) {
+            view.checkSelectedCartHeader($cartTable, checked);
+            $cartTable.find('tbody tr input.input-product-selected').prop('checked', checked);
+            if(checked) {
+                $cartTable.find('tbody tr').addClass('selected');
+            } else {
+                $cartTable.find('tbody tr').removeClass('selected');
+            }
+        },
+
+        checkSelectedCartItem: function($cartTable, item, checked) {
+            var $tr = $cartTable.find('tbody tr[data-id="'+ item.id +'"]')
+            $tr.find('input.input-product-selected').prop('checked', checked);
+            if(checked) $tr.addClass('selected');
+            else $tr.removeClass('selected');
+        },
     };
 
     var viewModel = {
+        handleProcessCheckout: function(e) {
+            e.preventDefault();
+            var hasSelectedCartItems = model.hasSelectedCartItems();
+            if (!hasSelectedCartItems) {
+                view.showNoCartItemSelectedAlert()
+            } else {
+                view.redirectToCheckoutPage();
+            }
+        },
+
         handleRemoveCartItem: function (cartItem) {
             model.removeItem(cartItem.id);
             viewModel.updateCartOnMenu();
@@ -362,25 +512,10 @@ var cartModule = (function () {
         handleAddToCart: function (e) {
             e.preventDefault();
             e.stopPropagation()
-            var $ele = $(e.target).parents('.product-card');
-            var newProduct = {
-                productId: $ele.data('id'),
-                name: $ele.data('name'),
-                price: Number($ele.data('price')),
-                image: $ele.data('image'),
-                slug: $ele.data('slug'),
-                productTypeId: $ele.data('type-id'),
-                productTypeName: $ele.data('type-name'),
-                available: $ele.data('available'),
-            }
-            if (newProduct.available == '0') {
-                AlertUtils.showAlert({
-                    title: constants.product_runout_title,
-                    content: constants.product_runout_content,
-                    type: 'red'
-                })
-            } else {
-                model.addToCart(newProduct, 1);
+            var $productCard = $(e.target).parents('.product-card');
+            var newProduct = view.getProductDetailsInfo($productCard, false);
+            if(newProduct) {
+                model.addToCart(newProduct);
                 viewModel.updateCartOnMenu()
                 view.showProductAddedMessage();
             }
@@ -389,32 +524,21 @@ var cartModule = (function () {
         handleAddProductInCartDetails: function (e) {
             e.preventDefault();
             var $productDetails = $('#productDetails');
-            var productId = $productDetails.data('id');
-            var name = $productDetails.data('name');
-            var price = Number($productDetails.data('price'));
-            var image = $productDetails.data('image');
-            var slug = $productDetails.data('slug');
-            var quantity = $('#productQuantity').val();
-            var productTypeId = $('.select-product-type.active').data('product-type-id');
-            var productTypeName = $productDetails.data('type-name');
-            if (!ValidationUtils.isEmpty(productTypeId)) {
-                price = +$('.select-product-type.active').data('product-type-price');
-                productTypeName = $('.select-product-type.active').data('product-type-name');
+            var product = view.getProductDetailsInfo($productDetails, true);
+            if(product) {
+                model.addToCart(product);
+                viewModel.updateCartOnMenu()
+                view.showProductAddedMessage();
             }
+        },
 
-            var product = {
-                productId: productId,
-                name: name,
-                price: price,
-                image: image,
-                slug: slug,
-                productTypeId: productTypeId,
-                productTypeName: productTypeName
-            }
-
-            model.addToCart(product, StringUtils.getNumber(quantity));
-            viewModel.updateCartOnMenu()
-            view.showProductAddedMessage();
+         handleBuyNow: function (e) {
+            e.preventDefault();
+            var $productDetails = $('#productDetails');
+            var product = view.getProductDetailsInfo($productDetails, true);
+            product.shouldBuyNow = true;
+            model.addToCart(product);
+            view.redirectToCheckoutPage();
         },
 
         handleChangeQuantity: function (e, id) {
@@ -423,7 +547,23 @@ var cartModule = (function () {
             model.setProductQuantity(id, StringUtils.getNumber(quantity))
             var cartItemTotalPrice = model.getCartItemTotalPrice(id);
             var $renderedEle = $ele.parents('tr').find('td.product-subtotal');
-            view.renderCartItemTotal($renderedEle, cartItemTotalPrice)
+            view.renderCartItemTotal($renderedEle, cartItemTotalPrice);
+        },
+
+        handleChangeCartItemSelected: function(e, item) {
+            var itemSelected = e.target.checked;
+            model.updateCartItemSelected(item.id, itemSelected);
+            var $cartTable = $(e.target).parents('table.cart');
+            var selectedAll = model.isSelectedAllCartItems();
+            view.checkSelectedCartItem($cartTable, item, itemSelected);
+            view.checkSelectedCartHeader($cartTable, selectedAll);
+        },
+
+        handleChangeAllCartItemsSelected: function(e) {
+            var selectedAll = e.target.checked;
+            model.updateAllCartItemsSelected(selectedAll);
+            var $cartTable = $(e.target).parents('table.cart');
+            view.checkSelectedAllCartItem($cartTable, selectedAll);
         },
 
         handleClearCart: function () {
@@ -435,6 +575,7 @@ var cartModule = (function () {
         init: function () {
             view.bindEvents();
             var cartData = model.getCartData();
+            var selectedCartData = model.getSelectedCartData();
 
             // redirect to homepage when user in checkout page without cart-products
             if(location.href.includes('/dat-hang') && cartData.length === 0) return location.href = "/";
@@ -445,7 +586,7 @@ var cartModule = (function () {
             }
             if(ids.length === 0) {
                 view.renderCartOnCartPage(cartData);
-                view.renderCartOnCheckoutPage(cartData);
+                view.renderCartOnCheckoutPage(selectedCartData);
                 viewModel.updateCartOnMenu();
                 return;
             }
@@ -475,9 +616,10 @@ var cartModule = (function () {
                     }
                 }
 
-                model.saveCart(cartData)
+                model.saveCart(cartData);
+                var selectedCartData = model.getSelectedCartData();
                 view.renderCartOnCartPage(cartData);
-                view.renderCartOnCheckoutPage(cartData);
+                view.renderCartOnCheckoutPage(selectedCartData);
                 viewModel.updateCartOnMenu();
                 view.toggleLoader(false)
             }, function (err) {
