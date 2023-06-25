@@ -19,7 +19,7 @@ contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
       <div class="row cart-action">
         <div class="col-12">
           <a class="btn-alt small border" href="/">Tiếp tục mua sắm</a>
-          <a id="btn-continue-order" class="btn-alt small border ml-auto" href="/dat-hang" style="margin-left: auto;">Tiến hành đặt hàng</a>  
+          <a id="btn-continue-order" class="btn-alt small border ml-auto btn-fogo-primary" href="/dat-hang" style="margin-left: auto;">Tiến hành đặt hàng</a>
         </div>
       </div>
   </div>

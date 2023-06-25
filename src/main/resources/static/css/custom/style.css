@@ -790,6 +790,10 @@ header nav.navbar #logo a.navbar-brand img {
     max-width: 250px;
 }
 
+.table.cart tbody tr.selected {
+    background-color: #d3e0e9;
+}
+
 @media screen and (max-width: 767px) {
     .table-responsive td, .table-responsive th {
         white-space: normal!important;
@@ -826,6 +830,16 @@ header nav.navbar #logo a.navbar-brand img {
     padding: 0;
     padding-top: 10px;
     padding-bottom: 10px;
+}
+
+.btn-fogo-primary {
+    background-color: var(--main-color)!important;
+    border-color: var(--main-color)!important;
+}
+
+.btn-fogo-primary:hover {
+    color: var(--main-color)!important;
+    background-color: #fff!important;
 }
 
 /* .table.cart th, .table.cart td {
