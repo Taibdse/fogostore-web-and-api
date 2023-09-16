@@ -1,5 +1,5 @@
-<%@ page import="com.example.fogostore.common.enumeration.SocialPluginPosition"
-%> <%@ taglib prefix="layout" tagdir="/WEB-INF/tags" %>
+<%@ page import="com.example.fogostore.common.enumeration.SocialPluginPosition"%>
+<%@ taglib prefix="layout" tagdir="/WEB-INF/tags" %>
 <layout:socialPlugins position="${SocialPluginPosition.BODY_TAG}" />
 <script src="/assets/js/jquery.min.js"></script>
 <script src="/assets/js/bootstrap/bootstrap.min.js"></script>

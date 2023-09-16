@@ -30,4 +30,23 @@ public class Product {
     private Integer sortIndex;
     private String techInfo;
     private String relatedProductIds;
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", slug='" + slug + '\'' +
+                ", oldPrice=" + oldPrice +
+                ", newPrice=" + newPrice +
+                ", active=" + active +
+                ", available=" + available +
+                ", hot=" + hot +
+                ", isNew=" + isNew +
+                ", sortIndex=" + sortIndex +
+                ", techInfo='" + techInfo + '\'' +
+                ", relatedProductIds='" + relatedProductIds + '\'' +
+                '}';
+    }
 }

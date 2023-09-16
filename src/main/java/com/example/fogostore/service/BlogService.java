@@ -3,13 +3,11 @@ package com.example.fogostore.service;
 
 import com.example.fogostore.common.constants.BlogType;
 import com.example.fogostore.common.enumeration.PageType;
-import com.example.fogostore.common.utils.CustomStringUtils;
 import com.example.fogostore.common.utils.FileUtils;
 import com.example.fogostore.builder.ResultBuilder;
 import com.example.fogostore.dto.blog.BasicBlog;
 import com.example.fogostore.dto.blog.BlogDto;
 import com.example.fogostore.model.Blog;
-import com.example.fogostore.model.Category;
 import com.example.fogostore.model.PageMetadata;
 import com.example.fogostore.repository.BlogRepository;
 import com.example.fogostore.repository.PageMetadataRepository;
@@ -22,7 +20,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;

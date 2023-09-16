@@ -6,6 +6,7 @@ import com.example.fogostore.common.enumeration.PageType;
 import com.example.fogostore.dto.blog.BasicBlog;
 import com.example.fogostore.dto.blog.BlogDto;
 import com.example.fogostore.service.BlogService;
+import com.example.fogostore.service.CacheService;
 import com.example.fogostore.service.SharedMvcService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

@@ -1,10 +1,12 @@
 package com.example.fogostore.repository;
 
 
+import com.example.fogostore.common.constants.CacheValue;
 import com.example.fogostore.common.constants.CustomJpaQuery;
 import com.example.fogostore.dto.policy.BasicPolicy;
 import com.example.fogostore.dto.product.BasicProduct;
 import com.example.fogostore.model.Product;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,11 +15,18 @@ import org.springframework.data.jpa.repository.Query;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Integer> {
 
+    @Cacheable(value = CacheValue.findProductById, condition = "#id != null", key = "#id")
+    Optional<Product> findById(Integer id);
+
     @Query(value = "select * from product where slug = ?1", nativeQuery = true)
     Product findBySlug(String slug);
+
+    @Query(value = "select id from product where slug = ?1", nativeQuery = true)
+    Product findIdBySlug(String slug);
 
     @Query(value = "select * from product where hot = true and active = true order by sortIndex asc", nativeQuery = true)
     List<Product> findHotProducts();

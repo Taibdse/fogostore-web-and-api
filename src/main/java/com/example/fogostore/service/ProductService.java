@@ -1,11 +1,11 @@
 package com.example.fogostore.service;
 
+import com.example.fogostore.common.constants.CacheValue;
 import com.example.fogostore.common.constants.ImageConstants;
 import com.example.fogostore.common.constants.PageSize;
 import com.example.fogostore.common.constants.ProductSortBy;
 import com.example.fogostore.common.enumeration.PageType;
 import com.example.fogostore.common.objects.ProductInclusionFieldsBuilder;
-import com.example.fogostore.common.utils.CustomStringUtils;
 import com.example.fogostore.common.utils.FileUtils;
 import com.example.fogostore.dto.product.BasicProduct;
 import com.example.fogostore.dto.product.ProductDto;
@@ -15,6 +15,9 @@ import com.example.fogostore.model.*;
 import com.example.fogostore.repository.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -38,7 +41,7 @@ public interface ProductService {
 
     ProductDto getBySlug(String slug);
 
-    ProductDto getById(int id);
+    ProductDto getById(Integer id);
 
     List<ProductDto> getHotProducts();
 
@@ -105,6 +108,12 @@ class ProductServiceImpl implements ProductService {
 
     @Autowired
     SharedService sharedService;
+
+    @Autowired
+    CacheService cacheService;
+
+    @Autowired
+    CacheManager cacheManager;
 
     private final String PRODUCT_NOTFOUND = "không tìm thấy sản phẩm này!";
     private final String CATEGORY_TYPE = "CATEGORY_TYPE";
@@ -261,6 +270,9 @@ class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = CacheValue.findProductById, key = "#productDto.id")
+    })
     public ResultBuilder update(ProductDto productDto) {
         ResultBuilder result = ResultBuilder.build();
         HashMap<String, String> errors = validate(productDto, true);
@@ -382,6 +394,7 @@ class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @CacheEvict(value = CacheValue.findProductById, key = "#id")
     public ResultBuilder delete(int id) {
         ResultBuilder result = new ResultBuilder();
         result.setSuccess(false);
@@ -395,7 +408,7 @@ class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto getById(int id) {
+    public ProductDto getById(Integer id) {
         Product product = productRepository.findById(id).orElse(null);
         ProductInclusionFieldsBuilder productInclusionFieldsBuilder = ProductInclusionFieldsBuilder.build().includeAll();
         return product == null ? null : toDto(product, productInclusionFieldsBuilder);
@@ -404,8 +417,9 @@ class ProductServiceImpl implements ProductService {
     @Override
     public ProductDto getBySlug(String slug) {
         Product product = productRepository.findBySlug(slug);
-        ProductInclusionFieldsBuilder productInclusionFieldsBuilder = ProductInclusionFieldsBuilder.build().includeAll();
-        return product == null ? null : toDto(product, productInclusionFieldsBuilder);
+        return product != null ? getById(product.getId()) : null;
+//        ProductInclusionFieldsBuilder productInclusionFieldsBuilder = ProductInclusionFieldsBuilder.build().includeAll();
+//        return product == null ? null : toDto(product, productInclusionFieldsBuilder);
     }
 
     @Override
