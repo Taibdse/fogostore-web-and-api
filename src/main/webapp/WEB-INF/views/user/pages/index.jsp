@@ -52,7 +52,7 @@
                             <c:forEach items="${entry.value}" var="product">
                                 <div class="item">
                                     <a href="/san-pham/${product.slug}">
-                                        <layout:product product="${product}"/>
+                                        <layout:product product="${product}" lazyLoadWithLazySizes="${true}" />
                                     </a>
                                 </div>
                             </c:forEach>

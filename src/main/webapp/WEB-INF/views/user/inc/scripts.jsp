@@ -2,6 +2,7 @@
 %> <%@ taglib prefix="layout" tagdir="/WEB-INF/tags" %>
 <layout:socialPlugins position="${SocialPluginPosition.BODY_TAG}" />
 <script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/js/lazysizes.min.js"></script>
 <script src="/assets/js/bootstrap/bootstrap.min.js"></script>
 <script src="/assets/js/jquery.flexslider-min.js"></script>
 <script src="/assets/js/jquery-confirm.min.js"></script>

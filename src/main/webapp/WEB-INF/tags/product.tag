@@ -2,6 +2,8 @@
 <%@ tag pageEncoding="UTF-8" trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="layout" tagdir="/WEB-INF/tags" %>
 <%@ attribute name="product" type="com.example.fogostore.dto.product.ProductDto" %>
+<%@ attribute name="carouselLazyLoad" type="java.lang.Boolean" required="false" %>
+<%@ attribute name="lazyLoadWithLazySizes" type="java.lang.Boolean" required="false" %>
 <div 
     class="single-item shop one-item design branding product-card"
     data-id="${product.id}"
@@ -13,7 +15,25 @@
     data-type-name="${product.type != null ? product.type.name : ""}"
     data-available="${product.available ? 1 : 0}">
     <div class="item" style="margin: 0">
-        <img src="${product.mainImage}" alt="${product.name}">
+         <c:choose>
+            <c:when test="${!carouselLazyLoad && !lazyLoadWithLazySizes}">
+                <img
+                    src="${product.mainImage}"
+                    alt="${product.mainImage}">
+            </c:when>
+            <c:when test="${carouselLazyLoad}">
+                <img
+                    class="owl-lazy"
+                    data-src="${product.mainImage}"
+                    alt="${product.mainImage}">
+            </c:when>
+            <c:when test="${lazyLoadWithLazySizes}">
+                <img
+                    class="lazyload blur-up"
+                    data-src="${product.mainImage}"
+                    alt="${product.mainImage}">
+            </c:when>
+        </c:choose>
         <div class="content" style="margin-bottom: 10px">
             <i class="icon ion-ios-cart-outline add-to-cart"></i>
             <h5 class="font-weight-bold" style="font-size: 0.9em">${product.name}</h5>
