@@ -123,7 +123,7 @@
                             <c:forEach items="${product.relatedProducts}" var="relatedProduct">
                                 <div class="item">
                                     <a href="/san-pham/${relatedProduct.slug}">
-                                        <layout:product product="${relatedProduct}"/>
+                                        <layout:product product="${relatedProduct}" lazyLoadWithLazySizes="${true}" />
                                     </a>
                                 </div>
                             </c:forEach>
